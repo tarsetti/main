@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>A Turing-complete game</title>
+</head>
+<body onload="start()">
+
+    <style>
+        .container {
+            width: 100%;
+            height: auto;
+        }
+
+        .content {
+            height: auto;
+            margin: 20px;
+            line-break: anywhere;
+        }
+
+        .tree td {
+            vertical-align: top;
+        }
+
+        .tree * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tree dl, .tree ol{
+            padding-top: 3px; position: relative;
+        }
+
+        .tree li{
+            float: left; text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 6px 1px 0 1px;
+            font-size: medium;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .tree li::before, .tree li::after{
+            content: '';
+            position: absolute; top: 0; right: 50%;
+            border-top: 1px solid #000;
+            width: 50%; height: 6px;
+        }
+
+        .tree li::after{
+            right: auto; left: 50%;
+            border-left: 1px solid #000;
+        }
+
+        .tree li:only-child::before {
+            content: '';
+            position: absolute; top: 0px; left: 50%;
+            border-left: 1px solid #000;
+            width: 0; height: 6px;
+        }
+
+        .tree li:first-child::before, .tree li:last-child::after{
+            border: 0 none;
+        }
+        
+        .tree li:last-child::before{
+            border-right: 1px solid #000;
+            border-radius: 0 5px 0 0;
+            -webkit-border-radius: 0 5px 0 0;
+            -moz-border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after{
+            border-radius: 5px 0 0 0;
+            -webkit-border-radius: 5px 0 0 0;
+            -moz-border-radius: 5px 0 0 0;
+        }
+
+        .tree dl dl::before, .tree dl ol::before{
+            content: '';
+            position: absolute; top: -4px; left: 50%;
+            border-left: 1px solid #000;
+            width: 0; height: 7px;
+        }
+
+        .tree li a, .tree li p{
+            border: 1px solid #000;
+            padding: 7px 7px;
+            display: inline-block;
+            
+            border-radius: 9px;
+            -webkit-border-radius: 9px;
+            -moz-border-radius: 9px;
+        }
+
+    </style>
+
+
+    <div class="container">
+        <div class="content">
+            <div class="tree">
+                <table>
+                    <tr>
+                        <tr>
+                            <td style="width: 85%;">
+                                <div id="score">
+                                    <div>
+                                        <span style="color: green;">Green: 1</span>  -  <span style="color: red;">Red: 0</span>
+                                    </div>
+                                    <div>
+                                        <span style="color: red;">Red</span> plays next
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 5%;">
+                                <dl>
+                                    <li>
+                                        1
+                                        <ol>
+                                            <li>
+                                                2
+                                                <ol>
+                                                    <li>
+                                                        3
+                                                        <ol>
+                                                            <li>
+                                                                <p></p>
+                                                            </li>
+                                                            <li>
+                                                                <p></p>
+                                                            </li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        B
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                            <li>
+                                                A
+                                            </li>
+                                        </ol>
+                                    </li>
+                                </dl>
+                            </td>
+                            <td style="width: 5%; text-align: center;">
+                                &rarr;
+                            </td>
+                            <td style="width: 5%;">
+                                <dl>
+                                    <li>
+                                        B
+                                    </li>
+                                </dl>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 85%;">
+                                <div id="trees"></div>
+                            </td>
+                            <td style="width: 5%;">
+                                <dl>
+                                    <li>
+                                        1
+                                        <ol>
+                                            <li>
+                                                2
+                                                <ol>
+                                                    <li>
+                                                        3
+                                                        <ol>
+                                                            <li>
+                                                                <p></p>
+                                                            </li>
+                                                            <li>
+                                                                C
+                                                            </li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        B
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                            <li>
+                                                A
+                                            </li>
+                                        </ol>
+                                    </li>
+                                </dl>
+                            </td>
+                            <td style="width: 5%; text-align: center;">
+                                &rarr;
+                            </td>
+                            <td style="width: 5%;">
+                                <dl>
+                                    <li>
+                                        1
+                                        <ol>
+                                            <li>
+                                                3
+                                                <ol>
+                                                    <li>
+                                                        C
+                                                    </li>
+                                                    <li>
+                                                        A
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                            <li>
+                                                2
+                                                <ol>
+                                                    <li>
+                                                        B
+                                                    </li>
+                                                    <li>
+                                                        A
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                        </ol>
+                                    </li>
+                                </dl>
+                            </td>
+                        </tr>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const scoreArea = document.getElementById('score'); 
+        const treeArea = document.getElementById('trees'); 
+        const start = () => {document.getElementById('trees').innerHTML = startGame();}
+
+        const treeMap = new Map();
+        let cloneMap = [];
+        let greenScore = 0;
+        let redScore = 0;
+
+        let nextColor = 'red';
+
+        const startGame = () => {
+            treeMap.set(1, 'green');
+            innerHtml = '<div class="tree"><dl><li><a style="background-color: green;"></a><ol><li><p onclick="addNode(2);"></p></li><li><p onclick="addNode(3);"></p></li></ol></li></dl></div>';
+            return innerHtml;
+        }
+
+        const addNode = index => {
+            treeMap.set(index, nextColor);
+            treeMap.set(2 * index, null);
+            treeMap.set(2 * index + 1, null);
+            nextColor = nextColor == 'red' ? 'green' : 'red';
+            refreshScreen();
+        }
+
+        const evaluateNode = index => {
+            cloneMap = new Map(treeMap);
+            if (treeMap.get(2 * index + 1)) {
+                treeMap.set(index / 2, cloneMap.get(index));
+                setSubTree(index, 2 * index + 1);
+                setSubTree(index + 1, index / 2 + 1);
+                treeMap.set(index / 2 + 1, cloneMap.get(index / 2));
+                setSubTree(index + 2, index + 1);
+                setSubTree(index + 3, index / 2 + 1);
+            } else {
+                setSubTree(index / 4, index + 1);
+            }
+            refreshScreen();
+        }
+
+        const setSubTree = (to, from) => {
+            if (cloneMap.get(from)) {
+                treeMap.set(to, cloneMap.get(from));
+                setSubTree(2 * to, 2 * from);
+                setSubTree(2 * to + 1, 2 * from + 1);
+            } else {
+                treeMap.set(to, null);
+            }
+        }
+
+        const refreshScreen = () => {
+            greenScore = 0;
+            redScore = 0;
+            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1) + '</dl></div>';
+            scoreArea.innerHTML = 
+            `                                
+                <div>
+                    <span style="color: green;">Green: ${greenScore}</span>  -  <span style="color: red;">Red: ${redScore}</span>
+                </div>
+                <div>
+                    <span style="color: ${nextColor};">${nextColor.charAt(0).toUpperCase() + nextColor.slice(1)}</span> plays next
+                </div>
+            `;
+        }
+
+        const getSubTree = index => {
+            if (!treeMap.get(index)) return `<li><p onclick="addNode(${index});"></p></li>`;
+            if (treeMap.get(index) == 'green') greenScore ++; else redScore++;
+            const evaluable = index % 4 || treeMap.get(2 * index) ? '"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index});"`;
+            return `<li><a style="background-color:${treeMap.get(index)};${evaluable}></a><ol>${getSubTree(2 * index)}${getSubTree(2 * index + 1)}</ol></li>`;
+        }
+
+    </script>
+
+   
+</body>
+</html>
+
