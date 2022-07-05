@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>A Turing-complete game</title>
+    <title>Setti (A Turing-complete game)</title>
 </head>
 <body onload="start()">
 
@@ -15,39 +15,76 @@
         .content {
             height: auto;
             margin: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: none;
+            border-top: none;
+            border-bottom: none;
+            animation: fadeEffect 0.5s;
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        } 
+
+        .tree * {
             line-break: anywhere;
+            margin: 0;
+            padding: 0;
         }
 
         .tree td {
             vertical-align: top;
         }
-
-        .tree * {
-            margin: 0;
-            padding: 0;
-        }
-
-        .tree dl, .tree ol{
+        
+        .tree dl, .tree ol {
             padding-top: 3px; position: relative;
         }
 
-        .tree li{
+        .tree li {
             float: left; text-align: center;
             list-style-type: none;
             position: relative;
             padding: 6px 1px 0 1px;
-            font-size: medium;
-            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .tree li::before, .tree li::after{
+        .tree li::before, .tree li::after {
             content: '';
             position: absolute; top: 0; right: 50%;
             border-top: 1px solid #000;
             width: 50%; height: 6px;
         }
 
-        .tree li::after{
+        .tree li::after {
             right: auto; left: 50%;
             border-left: 1px solid #000;
         }
@@ -59,38 +96,49 @@
             width: 0; height: 6px;
         }
 
-        .tree li:first-child::before, .tree li:last-child::after{
+        .tree li:first-child::before, .tree li:last-child::after {
             border: 0 none;
         }
         
-        .tree li:last-child::before{
+        .tree li:last-child::before {
             border-right: 1px solid #000;
-            border-radius: 0 5px 0 0;
-            -webkit-border-radius: 0 5px 0 0;
-            -moz-border-radius: 0 5px 0 0;
+            border-radius: 0 7px 0 0;
+            -webkit-border-radius: 0 7px 0 0;
+            -moz-border-radius: 0 7px 0 0;
         }
 
-        .tree li:first-child::after{
-            border-radius: 5px 0 0 0;
-            -webkit-border-radius: 5px 0 0 0;
-            -moz-border-radius: 5px 0 0 0;
+        .tree li:first-child::after {
+            border-radius: 7px 0 0 0;
+            -webkit-border-radius: 7px 0 0 0;
+            -moz-border-radius: 7px 0 0 0;
         }
 
-        .tree dl dl::before, .tree dl ol::before{
+        .tree dl dl::before, .tree dl ol::before {
             content: '';
             position: absolute; top: -4px; left: 50%;
             border-left: 1px solid #000;
             width: 0; height: 7px;
         }
 
-        .tree li a, .tree li p{
+        .tree li a, .tree li p {
             border: 1px solid #000;
-            padding: 7px 7px;
             display: inline-block;
             
-            border-radius: 9px;
-            -webkit-border-radius: 9px;
-            -moz-border-radius: 9px;
+            border-radius: 11px;
+            -webkit-border-radius: 11px;
+            -moz-border-radius: 11px;
+        }
+
+        .tree li a {
+            padding: 7px 7px;
+        }
+
+        .tree li p {
+            font-size: medium;
+            padding: 0px 6px;
+            vertical-align: top;
+            top: 0px;
+            
         }
 
     </style>
@@ -98,36 +146,47 @@
 
     <div class="container">
         <div class="content">
-            <div class="tree">
-                <table>
-                    <tr>
-                        <tr>
-                            <td style="width: 85%;">
-                                <div id="score">
-                                    <div>
-                                        <span style="color: green;">Green: 1</span>  -  <span style="color: red;">Red: 0</span>
-                                    </div>
-                                    <div>
-                                        <span style="color: red;">Red</span> plays next
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="width: 5%;">
+            <h1>Setti - A Turing-complete game for two players</h1>
+            <h2>by Gabriel A. Tarsetti</h2>
+        </div>
+        <div class="content">
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Game')" id="defaultOpen">Game</button>
+                <button class="tablinks" onclick="openTab(event, 'Rules')">Rules</button>
+                <button class="tablinks" onclick="openTab(event, 'Proof')">Proof of Turing-completeness</button>
+                <button class="tablinks" onclick="openTab(event, 'Contact')">Contact</button>
+            </div>
+            <div id="Game" class="tabcontent">
+                <div class="content">
+                    <div id="score"></div>
+                </div>
+                <div class="tree">
+                    <div id="left-block" style="width: 80%; height: auto; float:left;">      
+                        <div id="trees">
+                            Loading game...
+                        </div>
+                    </div>
+                    <div id="right-block" style="width: 15%;  height: auto; float: right;">
+                        <div style="height: 100px;">
+                            Quick transformation guide
+                        </div>
+                        <div style="height: 200px;">
+                            <div style="width: 100px; float: left;">
                                 <dl>
                                     <li>
-                                        1
+                                        <p>1</p>
                                         <ol>
                                             <li>
-                                                2
+                                                <p>2</p>
                                                 <ol>
                                                     <li>
-                                                        3
+                                                        <p style="border: 2px solid blue;">3</p>
                                                         <ol>
                                                             <li>
-                                                                <p></p>
+                                                                <p>&nbsp;&nbsp;</p>
                                                             </li>
                                                             <li>
-                                                                <p></p>
+                                                                <p>&nbsp;&nbsp;</p>
                                                             </li>
                                                         </ol>
                                                     </li>
@@ -142,35 +201,34 @@
                                         </ol>
                                     </li>
                                 </dl>
-                            </td>
-                            <td style="width: 5%; text-align: center;">
-                                &rarr;
-                            </td>
-                            <td style="width: 5%;">
+                            </div>
+                            <div style="width: 150px; float: right;">
+                                <div style="width: 50px; float: left;">
+                                    &rarr;
+                                </div>
+                                <div style="width: 100px; float: right;">
+                                    <dl>
+                                        <li>
+                                            B
+                                        </li>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="width: 100px; float: left;">
                                 <dl>
                                     <li>
-                                        B
-                                    </li>
-                                </dl>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width: 85%;">
-                                <div id="trees"></div>
-                            </td>
-                            <td style="width: 5%;">
-                                <dl>
-                                    <li>
-                                        1
+                                        <p>1</p>
                                         <ol>
                                             <li>
-                                                2
+                                                <p>2</p>
                                                 <ol>
                                                     <li>
-                                                        3
+                                                        <p style="border: 2px solid blue;">3</p>
                                                         <ol>
                                                             <li>
-                                                                <p></p>
+                                                                <p>&nbsp;&nbsp;</p>
                                                             </li>
                                                             <li>
                                                                 C
@@ -188,17 +246,149 @@
                                         </ol>
                                     </li>
                                 </dl>
-                            </td>
-                            <td style="width: 5%; text-align: center;">
+                            </div>
+                            <div style="width: 150px; float: right;">
+                                <div style="width: 50px; float: left;">
+                                    &rarr;
+                                </div>
+                                <div style="width: 100px; float: right;">
+                                    <dl>
+                                        <li>
+                                            <p>1</p>
+                                            <ol>
+                                                <li>
+                                                    <p>3</p>
+                                                    <ol>
+                                                        <li>
+                                                            C
+                                                        </li>
+                                                        <li>
+                                                            A
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li>
+                                                    <p>2</p>
+                                                    <ol>
+                                                        <li>
+                                                            B
+                                                        </li>
+                                                        <li>
+                                                            A
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="Rules" class="tabcontent">
+                <p>Setti is a game for two players, which also happens to be Turing-complete.</p>
+                <p>Players must decide on which score to play to (it must be bigger than 1; for example they can decide to play to a score of 3). The first player to reach that score after their turn ends is the winner.</p>
+                <p>The score is the difference between the number of pieces from each player placed on the board.</p>
+                <p>The condition for winning is only checked at the start of a player's turn or after their turn ends. If a player's winning score is reached during the opponent's turn it won't be enough for that player to win.</p>
+                <p>Each player during their turn must place a piece of their color on an empty space by clicking on that space. Red player goes first, but green player will start with the first piece already placed on the board.</p>
+                <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
+                <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
+                <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to do that transformation by clicking on the blue circled space.</p>
+                <p>If a player chooses to do a transformation their turn won't end. Only after placing their colored piece the next player's turn will begin.</p>
+                <p>There is no limit to the number of transformations a player can do before placing their colored piece, as long as there are available tranformations to be done.</p>
+                <p>In order for a transformation to be available, an occupied space must have at least two occupied places above to the right and an empty space below to the left.</p>
+                <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
+                <div class="tree" style="width: 250px;">
+                    <div style="height: 150px;">
+                        <div style="width: 100px; float: left;">
+                            <dl>
+                                <li>
+                                    <p>1</p>
+                                    <ol>
+                                        <li>
+                                            <p>2</p>
+                                            <ol>
+                                                <li>
+                                                    <p style="border: 2px solid blue;">3</p>
+                                                    <ol>
+                                                        <li>
+                                                            <p>&nbsp;&nbsp;</p>
+                                                        </li>
+                                                        <li>
+                                                            <p>&nbsp;&nbsp;</p>
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li>
+                                                    B
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            A
+                                        </li>
+                                    </ol>
+                                </li>
+                            </dl>
+                        </div>
+                        <div style="width: 150px; float: right;">
+                            <div style="width: 50px; float: left;">
                                 &rarr;
-                            </td>
-                            <td style="width: 5%;">
+                            </div>
+                            <div style="width: 100px; float: right;">
                                 <dl>
                                     <li>
-                                        1
+                                        B
+                                    </li>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="width: 100px; float: left;">
+                            <dl>
+                                <li>
+                                    <p>1</p>
+                                    <ol>
+                                        <li>
+                                            <p>2</p>
+                                            <ol>
+                                                <li>
+                                                    <p style="border: 2px solid blue;">3</p>
+                                                    <ol>
+                                                        <li>
+                                                            <p>&nbsp;&nbsp;</p>
+                                                        </li>
+                                                        <li>
+                                                            C
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li>
+                                                    B
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            A
+                                        </li>
+                                    </ol>
+                                </li>
+                            </dl>
+                        </div>
+                        <div style="width: 150px; float: right;">
+                            <div style="width: 50px; float: left;">
+                                &rarr;
+                            </div>
+                            <div style="width: 100px; float: right;">
+                                <dl>
+                                    <li>
+                                        <p>1</p>
                                         <ol>
                                             <li>
-                                                3
+                                                <p>3</p>
                                                 <ol>
                                                     <li>
                                                         C
@@ -209,7 +399,7 @@
                                                 </ol>
                                             </li>
                                             <li>
-                                                2
+                                                <p>2</p>
                                                 <ol>
                                                     <li>
                                                         B
@@ -222,30 +412,36 @@
                                         </ol>
                                     </li>
                                 </dl>
-                            </td>
-                        </tr>
-                    </tr>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+            </div>
+            <div id="Proof" class="tabcontent">
+                <p>To prove that this game is Turing-complete I will compare it with combinatory logic, which in turn is equivalent to lambda calculus as long as abstraction can be eliminated.</p>
+                <p>There are ways in which we can represent a combinatory logic expression as a binary tree, such as this game's board. The one I have choosen here is to consider each available empty space as an <i>improper</i> combinator which I'll call <b>T</b>, and each occupied space as putting the two below subtrees (which are in turn expressions) between parenthesis. The color of the piece occupying that space doesn't matter.</p>
+                <p>This <b>T</b> combinator needs to be applied to 3 arguments for a reduction to be possible (this is called a <i>transformation</i> in the game rules). I say that it's an <i>improper</i> combinator because its reduction rule depends on the first argument to which it is applied: if the first argument is just another <b>T</b> combinator, it will ignore it and behave as the <b>K</b> combinator applied to its second and third arguments. If the first argument is an expression different from just <b>T</b>, it will behave as the <b>S</b> combinator with its three arguments.</p>
+                <p>So this game is equivalent to <b>SK</b> calculus (which is Turing-complete) except for one detail: applying <b>T</b> to another <b>T</b> as its first argument won't behave as applying <b>S</b> to another <b>S</b> as its first argument. But as long as you don't intend to use <b>S</b> alone as a first argument it won't interfere with the rules for abstraction elimination, so it will still be Turing-complete. But if you want to, you can always use an alternative expression for <b>S</b>, for example <b>S(K(S))(I)</b> which using the <b>T</b> combinator would be <b>T(T(T)(T))(T(T(T))(T))</b>.</p>
+            </div>
+            <div id="Contact" class="tabcontent">
+                <h1><a href="mailto:gabriel@tarsetti.net">gabriel@tarsetti.net</a></h1>
             </div>
         </div>
     </div>
     
     <script>
+        document.getElementById("defaultOpen").click();
+
         const scoreArea = document.getElementById('score'); 
         const treeArea = document.getElementById('trees'); 
-        const start = () => {document.getElementById('trees').innerHTML = startGame();}
-
         const treeMap = new Map();
-        let cloneMap = [];
-        let greenScore = 0;
-        let redScore = 0;
+        var cloneMap, greenScore, redScore, nextColor;
 
-        let nextColor = 'red';
-
-        const startGame = () => {
+        const start = () => {
             treeMap.set(1, 'green');
-            innerHtml = '<div class="tree"><dl><li><a style="background-color: green;"></a><ol><li><p onclick="addNode(2);"></p></li><li><p onclick="addNode(3);"></p></li></ol></li></dl></div>';
-            return innerHtml;
+            nextColor = 'red';
+            refreshScreen();
         }
 
         const addNode = index => {
@@ -285,10 +481,11 @@
             greenScore = 0;
             redScore = 0;
             treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1) + '</dl></div>';
+            const greenDiff = greenScore - redScore;
             scoreArea.innerHTML = 
             `                                
                 <div>
-                    <span style="color: green;">Green: ${greenScore}</span>  -  <span style="color: red;">Red: ${redScore}</span>
+                    Score: <span style="color: ${greenDiff == 0 ? 'gray' : greenDiff > 0 ? 'green' : 'red;'};">${Math.abs(greenDiff)}</span></span>
                 </div>
                 <div>
                     <span style="color: ${nextColor};">${nextColor.charAt(0).toUpperCase() + nextColor.slice(1)}</span> plays next
@@ -297,15 +494,31 @@
         }
 
         const getSubTree = index => {
-            if (!treeMap.get(index)) return `<li><p onclick="addNode(${index});"></p></li>`;
+            if (!treeMap.get(index)) return `<li><a onclick="addNode(${index});"></a></li>`;
             if (treeMap.get(index) == 'green') greenScore ++; else redScore++;
             const evaluable = index % 4 || treeMap.get(2 * index) ? '"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index});"`;
             return `<li><a style="background-color:${treeMap.get(index)};${evaluable}></a><ol>${getSubTree(2 * index)}${getSubTree(2 * index + 1)}</ol></li>`;
         }
 
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
     </script>
 
-   
 </body>
 </html>
 
