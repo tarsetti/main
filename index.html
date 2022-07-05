@@ -147,7 +147,7 @@
     <div class="container">
         <div class="content">
             <h1>Setti - A Turing-complete game for two players</h1>
-            <h2>by Gabriel A. Tarsetti  -  July 2022</h2>
+            <h2>by Gabriel A. Tarsetti</h2>
         </div>
         <div class="content">
             <div class="tab">
@@ -157,8 +157,9 @@
                 <button class="tablinks" onclick="openTab(event, 'Contact')">Contact</button>
             </div>
             <div id="Game" class="tabcontent">
-                <div class="content">
-                    <div id="score"></div>
+                <div class="content" style="height: 50px;">
+                    <div id="score" style="float: left;"></div>
+                    <div style="float: right;"><button onclick="start()">Reset</button></div>
                 </div>
                 <div class="tree">
                     <div id="left-block" style="width: 80%; height: auto; float:left;">      
@@ -440,6 +441,8 @@
 
         const start = () => {
             treeMap.set(1, 'green');
+            treeMap.set(2, null);
+            treeMap.set(3, null);
             nextColor = 'red';
             refreshScreen();
         }
