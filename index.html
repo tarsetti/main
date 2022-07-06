@@ -18,6 +18,12 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        table, th, td {
+            border: 1px solid #BBB;
+            border-collapse: collapse;
+            padding: 4px !important;
+        }
+
         .tab {
             overflow: hidden;
             border: 1px solid #ccc;
@@ -60,10 +66,6 @@
             line-break: anywhere;
             margin: 0;
             padding: 0;
-        }
-
-        .tree td {
-            vertical-align: top;
         }
         
         .tree dl, .tree ol {
@@ -159,19 +161,25 @@
             <div id="Game" class="tabcontent">
                 <div class="content" style="height: 50px;">
                     <div id="score" style="float: left;"></div>
-                    <div style="float: right;"><button onclick="start()">Reset</button></div>
+                    <div style="float: right;"><button onclick="undo()">Undo</button><button onclick="start()">Reset</button></div>
                 </div>
                 <div class="tree">
-                    <div id="left-block" style="width: 80%; height: auto; float:left;">      
+                    <div id="left-block" style="width: 70%; height: auto; float:left;">      
                         <div id="trees">
-                            Loading game...
                         </div>
                     </div>
                     <div id="right-block" style="width: 15%;  height: auto; float: right;">
-                        <div style="height: 100px;">
-                            Quick transformation guide
+                        <div style="height: 50px;">
+                            Moves list
                         </div>
-                        <div style="height: 200px;">
+                        <div id="moves" style="height: auto;">
+                        </div>
+                    </div>
+                    <div id="right-block" style="width: 15%;  height: auto; float: right;">
+                        <div style="height: 50px;">
+                            Transformations quick guide
+                        </div>
+                        <div style="height: 150px;">
                             <div style="width: 100px; float: left;">
                                 <dl>
                                     <li>
@@ -436,54 +444,72 @@
 
         const scoreArea = document.getElementById('score'); 
         const treeArea = document.getElementById('trees'); 
-        const treeMap = new Map();
-        var cloneMap, greenScore, redScore, nextColor;
+        const movesArea = document.getElementById('moves'); 
+        const movesList = [];
+        const treeMaps = [];
+        var mapIndex, greenScore, redScore, nextColor;
 
         const start = () => {
-            treeMap.set(1, 'green');
-            treeMap.set(2, null);
-            treeMap.set(3, null);
-            nextColor = 'red';
-            refreshScreen();
+            movesList.length = 0;
+            mapIndex = 0;
+            treeMaps[0] = new Map();
+            nextColor = 'green';
+            addNode(1n);
         }
 
         const addNode = index => {
-            treeMap.set(index, nextColor);
-            treeMap.set(2 * index, null);
-            treeMap.set(2 * index + 1, null);
+            movesList.push({position: index, player: nextColor, type: 'add'});
+            treeMaps[mapIndex].set(index, nextColor);
+            treeMaps[mapIndex].set(2n * index, null);
+            treeMaps[mapIndex].set(2n * index + 1n, null);
             nextColor = nextColor == 'red' ? 'green' : 'red';
             refreshScreen();
         }
 
         const evaluateNode = index => {
-            cloneMap = new Map(treeMap);
-            if (treeMap.get(2 * index + 1)) {
-                treeMap.set(index / 2, cloneMap.get(index));
-                setSubTree(index, 2 * index + 1);
-                setSubTree(index + 1, index / 2 + 1);
-                treeMap.set(index / 2 + 1, cloneMap.get(index / 2));
-                setSubTree(index + 2, index + 1);
-                setSubTree(index + 3, index / 2 + 1);
+            movesList.push({position: index, player: nextColor, type: 'tf'});
+            mapIndex++;
+            treeMaps[mapIndex] = new Map(treeMaps[mapIndex - 1]);
+            if (treeMaps[mapIndex].get(2n * index + 1n)) {
+                treeMaps[mapIndex].set(index / 2n, treeMaps[mapIndex - 1].get(index));
+                setSubTree(index, 2n * index + 1n);
+                setSubTree(index + 1n, index / 2n + 1n);
+                treeMaps[mapIndex].set(index / 2n + 1n, treeMaps[mapIndex - 1].get(index / 2n));
+                setSubTree(index + 2n, index + 1n);
+                setSubTree(index + 3n, index / 2n + 1n);
             } else {
-                setSubTree(index / 4, index + 1);
+                setSubTree(index / 4n, index + 1n);
             }
             refreshScreen();
         }
 
         const setSubTree = (to, from) => {
-            if (cloneMap.get(from)) {
-                treeMap.set(to, cloneMap.get(from));
-                setSubTree(2 * to, 2 * from);
-                setSubTree(2 * to + 1, 2 * from + 1);
+            if (treeMaps[mapIndex - 1].get(from)) {
+                treeMaps[mapIndex].set(to, treeMaps[mapIndex - 1].get(from));
+                setSubTree(2n * to, 2n * from);
+                setSubTree(2n * to + 1n, 2n * from + 1n);
             } else {
-                treeMap.set(to, null);
+                treeMaps[mapIndex].set(to, null);
+            }
+        }
+
+        const undo = () => {
+            if (movesList.length > 1){
+                var lastMove = movesList.pop();
+                if (lastMove.type == 'add') {
+                    treeMaps[mapIndex].set(lastMove.position, null);
+                } else {
+                    mapIndex--;
+                }
+                nextColor = lastMove.player;
+                refreshScreen();
             }
         }
 
         const refreshScreen = () => {
             greenScore = 0;
             redScore = 0;
-            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1) + '</dl></div>';
+            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n) + '</dl></div>';
             const greenDiff = greenScore - redScore;
             scoreArea.innerHTML = 
             `                                
@@ -494,13 +520,36 @@
                     <span style="color: ${nextColor};">${nextColor.charAt(0).toUpperCase() + nextColor.slice(1)}</span> plays next
                 </div>
             `;
+            var table = document.createElement('table');
+            var row = table.insertRow(-1);
+            var tableIndex = row.insertCell(-1);
+            tableIndex.appendChild(document.createTextNode('#'));
+            var position = row.insertCell(-1);
+            position.appendChild(document.createTextNode('Position'));
+            var player = row.insertCell(-1);
+            player.appendChild(document.createTextNode('Player'));
+            var type = row.insertCell(-1);
+            type.appendChild(document.createTextNode('Type'));
+            for (var i = 0; i < movesList.length; i++) {
+                var row = table.insertRow(-1);
+                var tableIndex = row.insertCell(-1);
+                tableIndex.appendChild(document.createTextNode(i + 1));
+                var position = row.insertCell(-1);
+                position.appendChild(document.createTextNode(movesList[i].position));
+                var player = row.insertCell(-1);
+                player.appendChild(document.createTextNode(movesList[i].player));
+                var type = row.insertCell(-1);
+                type.appendChild(document.createTextNode(movesList[i].type));
+            }
+            movesArea.innerHTML = '';
+            movesArea.appendChild(table);
         }
 
         const getSubTree = index => {
-            if (!treeMap.get(index)) return `<li><a onclick="addNode(${index});"></a></li>`;
-            if (treeMap.get(index) == 'green') greenScore ++; else redScore++;
-            const evaluable = index % 4 || treeMap.get(2 * index) ? '"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index});"`;
-            return `<li><a style="background-color:${treeMap.get(index)};${evaluable}></a><ol>${getSubTree(2 * index)}${getSubTree(2 * index + 1)}</ol></li>`;
+            if (!treeMaps[mapIndex].get(index)) return `<li><a onclick="addNode(${index}n);"></a></li>`;
+            if (treeMaps[mapIndex].get(index) == 'green') greenScore ++; else redScore++;
+            const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
+            return `<li><a style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
         }
 
         function openTab(evt, tabName) {
