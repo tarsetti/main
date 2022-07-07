@@ -9,7 +9,7 @@
     <style>
         .container {
             width: 100%;
-            height: auto;
+            height: 100%;
         }
 
         .content {
@@ -80,7 +80,6 @@
             top: 200%;
             left: -15%;
             margin: auto;
-            line-break: auto;
         }
 
         .tooltip .tooltiptext::after {
@@ -109,7 +108,6 @@
         }
 
         .tree * {
-            line-break: anywhere;
             margin: 0;
             padding: 0;
         }
@@ -188,9 +186,7 @@
             top: 0px;
             
         }
-
     </style>
-
 
     <div class="container">
         <div class="content">
@@ -220,14 +216,14 @@
                         </div>
                     </div>
                     <div id="right-block" style="width: 15%;  height: auto; float: right;">
-                        <div style="height: 50px; line-break: auto;">
+                        <div style="height: 50px;">
                             Moves list
                         </div>
                         <div id="moves" style="height: auto;">
                         </div>
                     </div>
                     <div id="right-block" style="width: 15%;  height: auto; float: right;">
-                        <div style="height: 50px; line-break: auto;">
+                        <div style="height: 50px;">
                             Transformations quick guide
                         </div>
                         <div style="height: 150px;">
@@ -348,17 +344,19 @@
                 </div>
             </div>
             <div id="Rules" class="tabcontent">
-                <p>Tarset is a game for two players, which also happens to be a Turing tarpit (i.e. it is Turing-complete although it would make a programming language of the <i>esoteric</i> type due to its minimalistic design).</p>
-                <p>Before starting to play, players must decide which score will be required to win the game. This value should be at least 2, being the score the difference between the number of pieces from each player placed on the board.</p>
-                <p>The condition for winning is only checked when a player's turn ends and the opponent's turn begins. If a player's winning score is reached while the opponent is performing <i>transformations</i> (This game rule is explained later) it won't be enough for that player to win.</p>
-                <p>During their turn each player must place a piece of their color on an empty space by clicking on that space. Red player goes first, while green player will start with the first piece already placed on the board.</p>
-                <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
-                <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
-                <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to perform that transformation by clicking on the blue circled space.</p>
-                <p>If a player chooses to perform a transformation their turn won't end. Only after placing their colored piece will the next player's turn begin.</p>
-                <p>There is no limit to the number of transformations a player can perform before placing their colored piece, as long as there are available tranformations to be performed.</p>
-                <p>In order for a transformation to be available, an occupied space must have at least two consecutive occupied spaces above to the right and an empty space below to the left.</p>
-                <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
+                <div>
+                    <p>Tarset is a game for two players, which also happens to be a Turing tarpit (i.e. it is Turing-complete although it would make a programming language of the <i>esoteric</i> type, partly due to its minimalistic design).</p>
+                    <p>Before starting to play, players must decide which score will be required to win the game. This value should be at least 2, being the score the difference between the number of pieces placed on the board from each player.</p>
+                    <p>The condition for winning is only checked when a player's turn ends and the opponent's turn begins. If a player's winning score is reached while the opponent is performing <i>transformations</i> (This game rule is explained later) it won't be enough for that player to win.</p>
+                    <p>During their turn each player must place a piece of their color on an empty space by clicking on that space. Red player goes first, while green player will start with the first piece already placed on the board.</p>
+                    <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
+                    <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
+                    <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to perform that transformation by clicking on the blue circled space.</p>
+                    <p>If a player chooses to perform a transformation their turn won't end. Only after placing their colored piece will the next player's turn begin.</p>
+                    <p>There is no limit to the number of transformations a player can perform before placing their colored piece, as long as there are available tranformations to be performed (this rule might change in the future).</p>
+                    <p>In order for a transformation to be available, an occupied space must have at least two consecutive occupied spaces above to the right and an empty space below to the left.</p>
+                    <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
+                </div>
                 <div class="tree" style="width: 250px;">
                     <div style="height: 150px;">
                         <div style="width: 100px; float: left;">
@@ -475,16 +473,21 @@
                         </div>
                     </div>
                 </div>
-                <p></p>
+                <div style="width: 100%; float: left;">
+                    <h3>Pending rules</h3>
+                    <p>There are a few rules which are still to be determined, including the conditions for tie and the limit of transformations a player can do during a single turn.</p>
+                    <p>Regarding ties, most probably one condition will be that the same exact game position is repeated a number of times during the same match.</p>
+                    <p>Other rules might be added or updated in the future.</p>
+                </div>
             </div>
             <div id="Proof" class="tabcontent">
-                <p>To prove that this game is Turing-complete I will compare it with combinatory logic, which in turn is equivalent to lambda calculus as long as abstraction elimination can be done.</p>
+                <p>To prove that this game is Turing-complete I will compare it to combinatory logic, which in turn is equivalent to lambda calculus as long as abstraction elimination can be done.</p>
                 <p>The game board is a binary tree, and there are ways in which we can represent a combinatory logic expression as a binary tree. The one I have choosen here is to consider each available empty space as an <i>improper</i> combinator which I'll call <b>T</b>, and each occupied space as putting the two subtrees below it (which are in turn expressions) between parenthesis. The color of the piece occupying that space doesn't matter.</p>
                 <p>This <b>T</b> combinator needs to be applied to 3 arguments for a reduction to be possible (this is called a <i>transformation</i> in the game rules). I say that it's an <i>improper</i> combinator because its reduction rule depends on the first argument to which it is applied: if the first argument is just another <b>T</b> combinator, it will ignore it and behave as the <b>K</b> combinator applied to its second and third arguments. If the first argument is an expression different from just <b>T</b>, it will behave as the <b>S</b> combinator with its three arguments.</p>
                 <p>So this game is equivalent to <b>SK</b> calculus (which is Turing-complete) except for one detail: applying <b>T</b> to another <b>T</b> as its first argument won't behave as applying <b>S</b> to another <b>S</b> as its first argument. But as long as you don't intend to use <b>S</b> alone as an argument it won't interfere with the rules for abstraction elimination, so it will still be Turing-complete. And if you really want to, you can always use an alternative expression for <b>S</b>, for example <b>S(K(S))(I)</b> which using the <b>T</b> combinator would be <b>T(T(T)(T))(T(T(T))(T))</b>.</p>
             </div>
             <div id="Contact" class="tabcontent">
-                <h1><a href="mailto:gabriel@tarsetti.net">gabriel@tarsetti.net</a></h1>
+                <h2><a href="mailto:gabriel@tarsetti.net">gabriel@tarsetti.net</a></h2>
                 <p>Bitcoin donations accepted at <a href="#" onclick="navigator.clipboard.writeText('1F9C2FLL57GLNWV6tqA3A9bcCKsHhJ6pCn'); alert('Bitcoin address copied to clipboard');">1F9C2FLL57GLNWV6tqA3A9bcCKsHhJ6pCn</a></p>
             </div>
         </div>
