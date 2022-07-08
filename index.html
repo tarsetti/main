@@ -196,6 +196,7 @@
         <div class="content">
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'Game')" id="defaultOpen">Game</button>
+                <button class="tablinks" onclick="openTab(event, 'History')">Change history</button>
                 <button class="tablinks" onclick="openTab(event, 'Rules')">Rules</button>
                 <button class="tablinks" onclick="openTab(event, 'Proof')">Proof of Turing-completeness</button>
                 <button class="tablinks" onclick="openTab(event, 'Contact')">Contact</button>
@@ -206,6 +207,7 @@
                     <div style="float: right;">
                         <label for="winscore">Winning score:</label>
                         <input type="number" style="width: 50px;" id="winscore" name="winscore" min="2" step="1" value="2" onchange="updateWinningScore()"> 
+                        <button onclick="skipTurn()">Skip turn</button>
                         <button onclick="undo()">Undo</button>
                         <button onclick="start()">Reset</button>
                     </div>
@@ -342,6 +344,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div id="History" class="tabcontent">
+                <p>22-7-4 - Initial rules uploaded</p>
+                <p>22-7-8 - A simple algorithm was discovered that allows any player to force ties. Options for fixing the rules are being considered.</p>
             </div>
             <div id="Rules" class="tabcontent">
                 <div>
@@ -534,6 +540,12 @@
             }
         }
 
+        const skipTurn = () => {
+            movesList.push({position: 0, player: nextColor, type: 'skip'});
+            nextColor = nextColor == 'red' ? 'green' : 'red';
+            refreshScreen();
+        }
+
         const evaluateNode = index => {
             movesList.push({position: index, player: nextColor, type: 'tf'});
             mapIndex++;
@@ -564,10 +576,10 @@
         const undo = () => {
             if (movesList.length > 1){
                 var lastMove = movesList.pop();
-                if (lastMove.type == 'add') {
-                    treeMaps[mapIndex].set(lastMove.position, null);
-                } else {
+                if (lastMove.type == 'tf') {
                     mapIndex--;
+                } else {
+                    treeMaps[mapIndex].set(lastMove.position, null);
                 }
                 nextColor = lastMove.player;
                 refreshScreen();
