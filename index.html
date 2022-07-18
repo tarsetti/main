@@ -206,8 +206,8 @@
                     <div id="score" style="float: left;"></div>
                     <div style="float: right;">
                         <label for="winscore">Winning score:</label>
-                        <input type="number" style="width: 50px;" id="winscore" name="winscore" min="2" step="1" value="2" onchange="updateWinningScore()"> 
-                        <button onclick="skipTurn()">Skip turn</button>
+                        <input type="number" style="width: 50px;" id="winscore" name="winscore" min="2" step="1" value="2" onchange="updateWinningScore()">
+                        <button onclick="skipTurn()">End turn</button>
                         <button onclick="undo()">Undo</button>
                         <button onclick="start()">Reset</button>
                     </div>
@@ -529,25 +529,29 @@
         }
 
         const addNode = index => {
-            movesList.push({position: index, player: nextColor, type: 'add'});
+            movesList.push({position: index, player: nextColor, type: 'add', cooldown: 0});
             treeMaps[mapIndex].set(index, nextColor);
             treeMaps[mapIndex].set(2n * index, null);
             treeMaps[mapIndex].set(2n * index + 1n, null);
-            nextColor = nextColor == 'red' ? 'green' : 'red';
-            refreshScreen();
+            changeColor();
+            refreshScreen(index);
             if (Math.abs(greenScore - redScore) >= winningScore) {
                 alert (`${greenScore > redScore ? 'Green' : 'Red'} player wins`);
             }
         }
 
         const skipTurn = () => {
-            movesList.push({position: 0, player: nextColor, type: 'skip'});
-            nextColor = nextColor == 'red' ? 'green' : 'red';
+            movesList.push({position: 0, player: nextColor, type: 'skip', cooldown: 0});
+            changeColor();
             refreshScreen();
+        }
+        
+        const changeColor = () => {
+            nextColor = nextColor == 'red' ? 'green' : 'red';
         }
 
         const evaluateNode = index => {
-            movesList.push({position: index, player: nextColor, type: 'tf'});
+            movesList.push({position: index, player: nextColor, type: 'tf', cooldown: -1});
             mapIndex++;
             treeMaps[mapIndex] = new Map(treeMaps[mapIndex - 1]);
             if (treeMaps[mapIndex].get(2n * index + 1n)) {
@@ -560,7 +564,7 @@
             } else {
                 setSubTree(index / 4n, index + 1n);
             }
-            refreshScreen();
+            refreshScreen(-1);
         }
 
         const setSubTree = (to, from) => {
@@ -582,14 +586,14 @@
                     treeMaps[mapIndex].set(lastMove.position, null);
                 }
                 nextColor = lastMove.player;
-                refreshScreen();
+                refreshScreen(lastMove.cooldown);
             }
         }
 
-        const refreshScreen = () => {
+        const refreshScreen = cdIndex => {
             greenScore = 0;
             redScore = 0;
-            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n) + '</dl></div>';
+            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n, cdIndex) + '</dl></div>';
             const greenDiff = greenScore - redScore;
             scoreArea.innerHTML = 
             `                                
@@ -625,11 +629,11 @@
             movesArea.appendChild(table);
         }
 
-        const getSubTree = index => {
-            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" onclick="addNode(${index}n);"><span class="tooltiptext">${index}</span></a></li>`;
+        const getSubTree = (index, cdIndex) => {
+            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${cdIndex == -1 ? 'onclick="addNode(' + index + 'n)' : ''};"><span class="tooltiptext">${index}</span></a></li>`;
             if (treeMaps[mapIndex].get(index) == 'green') greenScore ++; else redScore++;
-            const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
-            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
+            const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : cdIndex == index ? ' border: 2px solid orange; padding: 6px 6px;"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
+            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index, cdIndex)}${getSubTree(2n * index + 1n, cdIndex)}</ol></li>`;
         }
 
         function openTab(evt, tabName) {
