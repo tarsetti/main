@@ -630,7 +630,7 @@
         }
 
         const getSubTree = (index, cdIndex) => {
-            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${cdIndex == -1 ? 'onclick="addNode(' + index + 'n)' : ''};"><span class="tooltiptext">${index}</span></a></li>`;
+            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${cdIndex == -1 ? 'onclick="addNode(' + index + 'n)"' : ''}><span class="tooltiptext">${index}</span></a></li>`;
             if (treeMaps[mapIndex].get(index) == 'green') greenScore ++; else redScore++;
             const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : cdIndex == index ? ' border: 2px solid orange; padding: 6px 6px;"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
             return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index, cdIndex)}${getSubTree(2n * index + 1n, cdIndex)}</ol></li>`;
