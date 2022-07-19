@@ -355,14 +355,15 @@
                     <p>Tarset is a game for two players, which also happens to be a Turing tarpit (i.e. it is Turing-complete although it would make a programming language of the <i>esoteric</i> type, partly due to its minimalistic design).</p>
                     <p>Before starting to play, players must decide which score will be required to win the game. This value should be at least 2, being the score the difference between the number of pieces placed on the board from each player.</p>
                     <p>The condition for winning is only checked when a player's turn ends and the opponent's turn begins. If a player's winning score is reached while the opponent is performing <i>transformations</i> (This game rule is explained later) it won't be enough for that player to win.</p>
-                    <p>During their turn each player must place a piece of their color on an empty space by clicking on that space. Red player goes first, while green player will start with the first piece already placed on the board.</p>
+                    <p>During their turn each player must either place a piece of their color on an empty space or make a number of <i>transformations</i>.</p>
+                    <p>To play a piece on the board, players must click on an empty space. Red player goes first, while green player will start with the first piece already placed on the board.</p>
                     <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
                     <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
                     <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to perform that transformation by clicking on the blue circled space.</p>
                     <p>If a player chooses to perform a transformation their turn won't automatically end. Only after clicking on the "End turn" button will the next player's turn begin.</p>
                     <p>There is no limit to the number of transformations a player can perform before ending their turn, as long as there are available tranformations to be performed (this rule might change in the future).</p>
                     <p>In order for a transformation to be available, an occupied space must have at least two consecutive occupied spaces above to the right and an empty space below to the left.</p>
-                    <p>Another condition required for a transformation to be available is that the piece was not placed during the immediate previous turn. There is a cooldown of 1 turn before a transformation is available, denoted by an orange circle.</p>
+                    <p>Another condition required for a transformation to be available is that the piece was not placed during the immediate previous turn. There is a cooldown of one turn (denoted by an orange circle) before a transformation is available.</p>
                     <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
                 </div>
                 <div class="tree" style="width: 250px;">
@@ -532,7 +533,7 @@
         }
 
         const addNode = index => {
-            movesList.push({position: index, player: nextColor, type: 'add', cooldown: 0});
+            movesList.push({position: index, player: nextColor, type: 'add', cooldown: index});
             treeMaps[mapIndex].set(index, nextColor);
             treeMaps[mapIndex].set(2n * index, null);
             treeMaps[mapIndex].set(2n * index + 1n, null);
