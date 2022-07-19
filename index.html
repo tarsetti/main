@@ -346,8 +346,9 @@
                 </div>
             </div>
             <div id="History" class="tabcontent">
-                <p>22-7-4 - Initial rules uploaded</p>
-                <p>22-7-8 - A simple algorithm was discovered that allows any player to force ties. Options for fixing the rules are being considered.</p>
+                <p>22-07-04 - Initial rules uploaded</p>
+                <p>22-07-08 - A simple algorithm was discovered that allows any player to force ties. Options for fixing the rules are being considered.</p>
+                <p>22-07-18 - Cooldown for transformations and no pieces added during transformations turn added to see if these can avoid the forced tie scenario</p>
             </div>
             <div id="Rules" class="tabcontent">
                 <div>
@@ -358,9 +359,10 @@
                     <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
                     <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
                     <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to perform that transformation by clicking on the blue circled space.</p>
-                    <p>If a player chooses to perform a transformation their turn won't end. Only after placing their colored piece will the next player's turn begin.</p>
-                    <p>There is no limit to the number of transformations a player can perform before placing their colored piece, as long as there are available tranformations to be performed (this rule might change in the future).</p>
+                    <p>If a player chooses to perform a transformation their turn won't automatically end. Only after clicking on the "End turn" button will the next player's turn begin.</p>
+                    <p>There is no limit to the number of transformations a player can perform before ending their turn, as long as there are available tranformations to be performed (this rule might change in the future).</p>
                     <p>In order for a transformation to be available, an occupied space must have at least two consecutive occupied spaces above to the right and an empty space below to the left.</p>
+                    <p>Another condition required for a transformation to be available is that the piece was not placed during the immediate previous turn. There is a cooldown of 1 turn before a transformation is available, denoted by an orange circle.</p>
                     <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
                 </div>
                 <div class="tree" style="width: 250px;">
@@ -483,6 +485,7 @@
                     <h3>Pending rules</h3>
                     <p>There are a few rules which are still to be determined, including the conditions for tie and the limit of transformations a player can do during a single turn.</p>
                     <p>Regarding ties, most probably one condition will be that the same exact game position is repeated a number of times during the same match.</p>
+                    <p>Currently, players can skip their turn at any moment. This rule might be removed later.</p>
                     <p>Other rules might be added or updated in the future.</p>
                 </div>
             </div>
