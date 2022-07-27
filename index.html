@@ -578,6 +578,7 @@
 
         const setSubTree = (to, from) => {
             if (treeMaps[mapIndex - 1].get(from)) {
+                console.log(from, to);
                 if (cdIndex == from) cdIndex == to;
                 treeMaps[mapIndex].set(to, treeMaps[mapIndex - 1].get(from));
                 setSubTree(2n * to, 2n * from);
