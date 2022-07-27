@@ -560,7 +560,6 @@
 
         const evaluateNode = index => {
             eval = true;
-            movesList.push({position: index, player: nextColor, type: 'tf', cooldown: cdIndex});
             mapIndex++;
             treeMaps[mapIndex] = new Map(treeMaps[mapIndex - 1]);
             if (treeMaps[mapIndex].get(2n * index + 1n)) {
@@ -573,6 +572,7 @@
             } else {
                 setSubTree(index / 4n, index + 1n);
             }
+            movesList.push({position: index, player: nextColor, type: 'tf', cooldown: cdIndex});
             refreshScreen();
         }
 
@@ -590,11 +590,10 @@
         const undo = () => {
             if (movesList.length > 1){
                 var lastMove = movesList.pop();
+                eval = movesList[movesList.length - 1].type == 'tf' ? true : false;
                 if (lastMove.type == 'tf') {
-                    eval = true;
                     mapIndex--;
                 } else {
-                    eval = false;
                     treeMaps[mapIndex].set(lastMove.position, null);
                 }
                 nextColor = lastMove.player;
