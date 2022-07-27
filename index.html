@@ -513,6 +513,7 @@
         const movesList = [];
         const treeMaps = [];
         var mapIndex, greenScore, redScore, nextColor, winningScore;
+        var cdIndex = 0, eval = false;
 
         const start = () => {
             winningScore = 2;
@@ -538,15 +539,18 @@
             treeMaps[mapIndex].set(2n * index, null);
             treeMaps[mapIndex].set(2n * index + 1n, null);
             changeColor();
-            refreshScreen(index);
+            cdIndex = index;
+            refreshScreen();
             if (Math.abs(greenScore - redScore) >= winningScore) {
                 alert (`${greenScore > redScore ? 'Green' : 'Red'} player wins`);
             }
         }
 
         const skipTurn = () => {
+            eval = false;
             movesList.push({position: 0, player: nextColor, type: 'skip', cooldown: 0});
             changeColor();
+            cdIndex = 0;
             refreshScreen();
         }
         
@@ -555,7 +559,8 @@
         }
 
         const evaluateNode = index => {
-            movesList.push({position: index, player: nextColor, type: 'tf', cooldown: -1});
+            eval = true;
+            movesList.push({position: index, player: nextColor, type: 'tf', cooldown: cdIndex});
             mapIndex++;
             treeMaps[mapIndex] = new Map(treeMaps[mapIndex - 1]);
             if (treeMaps[mapIndex].get(2n * index + 1n)) {
@@ -568,11 +573,12 @@
             } else {
                 setSubTree(index / 4n, index + 1n);
             }
-            refreshScreen(-1);
+            refreshScreen();
         }
 
         const setSubTree = (to, from) => {
             if (treeMaps[mapIndex - 1].get(from)) {
+                if (cdIndex == from) cdIndex == to;
                 treeMaps[mapIndex].set(to, treeMaps[mapIndex - 1].get(from));
                 setSubTree(2n * to, 2n * from);
                 setSubTree(2n * to + 1n, 2n * from + 1n);
@@ -585,19 +591,22 @@
             if (movesList.length > 1){
                 var lastMove = movesList.pop();
                 if (lastMove.type == 'tf') {
+                    eval = true;
                     mapIndex--;
                 } else {
+                    eval = false;
                     treeMaps[mapIndex].set(lastMove.position, null);
                 }
                 nextColor = lastMove.player;
-                refreshScreen(movesList[movesList.length - 1].cooldown);
+                cdIndex = movesList[movesList.length - 1].cooldown;
+                refreshScreen();
             }
         }
 
-        const refreshScreen = cdIndex => {
+        const refreshScreen = () => {
             greenScore = 0;
             redScore = 0;
-            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n, cdIndex) + '</dl></div>';
+            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n) + '</dl></div>';
             const greenDiff = greenScore - redScore;
             scoreArea.innerHTML = 
             `                                
@@ -633,11 +642,11 @@
             movesArea.appendChild(table);
         }
 
-        const getSubTree = (index, cdIndex) => {
-            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${cdIndex == -1 ? '' : 'onclick="addNode(' + index + 'n)"'}><span class="tooltiptext">${index}</span></a></li>`;
+        const getSubTree = index => {
+            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${eval ? '' : 'onclick="addNode(' + index + 'n)"'}><span class="tooltiptext">${index}</span></a></li>`;
             if (treeMaps[mapIndex].get(index) == 'green') greenScore ++; else redScore++;
             const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : cdIndex == index ? ' border: 2px solid orange; padding: 6px 6px;"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
-            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index, cdIndex)}${getSubTree(2n * index + 1n, cdIndex)}</ol></li>`;
+            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
         }
 
         function openTab(evt, tabName) {
