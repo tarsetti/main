@@ -195,7 +195,7 @@
         </div>
         <div class="content">
             <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'Game')" id="defaultOpen">Game</button>
+                <button class="tablinks" onclick="openTab(event, 'Game')" id="defaultOpen">The game</button>
                 <button class="tablinks" onclick="openTab(event, 'History')">Change history</button>
                 <button class="tablinks" onclick="openTab(event, 'Rules')">Rules</button>
                 <button class="tablinks" onclick="openTab(event, 'Proof')">Proof of Turing-completeness</button>
@@ -205,8 +205,6 @@
                 <div class="content" style="height: 50px;">
                     <div id="score" style="float: left;"></div>
                     <div style="float: right;">
-                        <label for="winscore">Winning score:</label>
-                        <input type="number" style="width: 50px;" id="winscore" name="winscore" min="2" step="1" value="2" onchange="updateWinningScore()">
                         <button onclick="skipTurn()">End turn</button>
                         <button onclick="undo()">Undo</button>
                         <button onclick="start()">Reset</button>
@@ -232,19 +230,19 @@
                             <div style="width: 100px; float: left;">
                                 <dl>
                                     <li>
-                                        <p>1</p>
+                                        <a style="background-color:lightblue"></a>
                                         <ol>
                                             <li>
-                                                <p>2</p>
+                                                <a style="background-color:lightblue"></a>
                                                 <ol>
                                                     <li>
-                                                        <p style="border: 2px solid blue;">3</p>
+                                                        <a style="background-color:lightblue; border: 2px solid blue;"></a>
                                                         <ol>
                                                             <li>
-                                                                <p>&nbsp;&nbsp;</p>
+                                                                <a></a>
                                                             </li>
                                                             <li>
-                                                                <p>&nbsp;&nbsp;</p>
+                                                                <a></a>
                                                             </li>
                                                         </ol>
                                                     </li>
@@ -277,16 +275,16 @@
                             <div style="width: 100px; float: left;">
                                 <dl>
                                     <li>
-                                        <p>1</p>
+                                        <a style="background-color:lightblue"></a>
                                         <ol>
                                             <li>
-                                                <p>2</p>
+                                                <a style="background-color:lightblue"></a>
                                                 <ol>
                                                     <li>
-                                                        <p style="border: 2px solid blue;">3</p>
+                                                        <a style="background-color:lightblue; border: 2px solid blue;"></a>
                                                         <ol>
                                                             <li>
-                                                                <p>&nbsp;&nbsp;</p>
+                                                                <a></a>
                                                             </li>
                                                             <li>
                                                                 C
@@ -312,10 +310,10 @@
                                 <div style="width: 100px; float: right;">
                                     <dl>
                                         <li>
-                                            <p>1</p>
+                                            <a style="background-color:lightblue"></a>
                                             <ol>
                                                 <li>
-                                                    <p>3</p>
+                                                    <a style="background-color:lightblue"></a>
                                                     <ol>
                                                         <li>
                                                             C
@@ -326,7 +324,7 @@
                                                     </ol>
                                                 </li>
                                                 <li>
-                                                    <p>2</p>
+                                                    <a style="background-color:lightblue"></a>
                                                     <ol>
                                                         <li>
                                                             B
@@ -349,41 +347,43 @@
                 <p>22-07-04 - Initial rules uploaded</p>
                 <p>22-07-08 - A simple algorithm was discovered that allows any player to force ties. Options for fixing the rules are being considered.</p>
                 <p>22-07-18 - Cooldown for transformations and no pieces added during transformations turn added to see if these can avoid the forced tie scenario</p>
+                <p>23-03-09 - Major rules redesign: only one green piece and new conditions for winning</p>
             </div>
             <div id="Rules" class="tabcontent">
                 <div>
                     <p>Tarset is a game for two players, which also happens to be a Turing tarpit (i.e. it is Turing-complete although it would make a programming language of the <i>esoteric</i> type, partly due to its minimalistic design).</p>
-                    <p>Before starting to play, players must decide which score will be required to win the game. This value should be at least 2, being the score the difference between the number of pieces placed on the board from each player.</p>
-                    <p>The condition for winning is only checked when a player's turn ends and the opponent's turn begins. If a player's winning score is reached while the opponent is performing <i>transformations</i> (This game rule is explained later) it won't be enough for that player to win.</p>
-                    <p>During their turn each player must either place a piece of their color on an empty space or make a number of <i>transformations</i>.</p>
-                    <p>To play a piece on the board, players must click on an empty space. Red player goes first, while green player will start with the first piece already placed on the board.</p>
+                    <p>In order to win, the red player must completely eliminate the green piece from the board. On the other hand, the green player needs to either have more than one copy of the green piece on the board or a green piece placed on the leftmost space of the board in order to win.</p>
+                    <p>If the green piece is eliminated or placed on the leftmost space of the board, the winner is immediately determined. But if there is more than one green piece and none of them placed on the leftmost space, the green player will only win after the red player has ended their turn.</p>
+                    <p>The game starts with a neutral piece (light blue) placed on the top space, a second neutral piece below it to the left and the green piece also below the first one to the right. Below the second neutral piece will be two empty spaces.</p>
+                    <p>During their turn each player must place a neutral piece on an empty space.</p>
+                    <p>To play a piece on the board, players must click on an empty space. Red player goes first.</p>
                     <p>Placing a piece on a space will make two more spaces become available below it, following a binary tree topology. If a space is no longer occupied then all spaces below it will be unavailable.</p>
                     <p>After a piece is played the current player's turn ends and the other player's turn begins.</p>
                     <p>If a <b><i>transformation</i></b> is possible (denoted by a blue circle around an occupied space) then the current player has an option to perform that transformation by clicking on the blue circled space.</p>
-                    <p>If a player chooses to perform a transformation their turn won't automatically end. Only after clicking on the "End turn" button will the next player's turn begin.</p>
-                    <p>There is no limit to the number of transformations a player can perform before ending their turn, as long as there are available tranformations to be performed (this rule might change in the future).</p>
+                    <p>If a player chooses to perform a transformation their turn won't automatically end. Only after placing a piece will the next player's turn begin.</p>
+                    <p>There is no limit to the number of transformations a player can perform before placing a piece, as long as there are available tranformations to be performed (this rule might change in the future).</p>
                     <p>In order for a transformation to be available, an occupied space must have at least two consecutive occupied spaces above to the right and an empty space below to the left.</p>
                     <p>Another condition required for a transformation to be available is that the piece was not placed during the immediate previous turn. There is a cooldown of one turn (denoted by an orange circle) before a transformation is available.</p>
-                    <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (numbers represent colored pieces and letters represent a space's content and everything below it).</p>
+                    <p>There are two rules for transformation, depending on whether the space below to the right of the blue circled one is empty or not. These transformation rules are shown below (letters represent a space's content and everything below it).</p>
                 </div>
                 <div class="tree" style="width: 250px;">
                     <div style="height: 150px;">
                         <div style="width: 100px; float: left;">
                             <dl>
                                 <li>
-                                    <p>1</p>
+                                    <a style="background-color:lightblue"></a>
                                     <ol>
                                         <li>
-                                            <p>2</p>
+                                            <a style="background-color:lightblue"></a>
                                             <ol>
                                                 <li>
-                                                    <p style="border: 2px solid blue;">3</p>
+                                                    <a style="background-color:lightblue; border: 2px solid blue;"></a>
                                                     <ol>
                                                         <li>
-                                                            <p>&nbsp;&nbsp;</p>
+                                                            <a></a>
                                                         </li>
                                                         <li>
-                                                            <p>&nbsp;&nbsp;</p>
+                                                            <a></a>
                                                         </li>
                                                     </ol>
                                                 </li>
@@ -416,16 +416,16 @@
                         <div style="width: 100px; float: left;">
                             <dl>
                                 <li>
-                                    <p>1</p>
+                                    <a style="background-color:lightblue"></a>
                                     <ol>
                                         <li>
-                                            <p>2</p>
+                                            <a style="background-color:lightblue"></a>
                                             <ol>
                                                 <li>
-                                                    <p style="border: 2px solid blue;">3</p>
+                                                    <a style="background-color:lightblue; border: 2px solid blue;"></a>
                                                     <ol>
                                                         <li>
-                                                            <p>&nbsp;&nbsp;</p>
+                                                            <a></a>
                                                         </li>
                                                         <li>
                                                             C
@@ -451,10 +451,10 @@
                             <div style="width: 100px; float: right;">
                                 <dl>
                                     <li>
-                                        <p>1</p>
+                                        <a style="background-color:lightblue"></a>
                                         <ol>
                                             <li>
-                                                <p>3</p>
+                                                <a style="background-color:lightblue"></a>
                                                 <ol>
                                                     <li>
                                                         C
@@ -465,7 +465,7 @@
                                                 </ol>
                                             </li>
                                             <li>
-                                                <p>2</p>
+                                                <a style="background-color:lightblue"></a>
                                                 <ol>
                                                     <li>
                                                         B
@@ -486,15 +486,15 @@
                     <h3>Pending rules</h3>
                     <p>There are a few rules which are still to be determined, including the conditions for tie and the limit of transformations a player can do during a single turn.</p>
                     <p>Regarding ties, most probably one condition will be that the same exact game position is repeated a number of times during the same match.</p>
-                    <p>Currently, players can skip their turn at any moment. This rule might be removed later.</p>
+                    <p>Currently, players can skip their turn at any moment. This rule is for testing purposes and might be removed later.</p>
                     <p>Other rules might be added or updated in the future.</p>
                 </div>
             </div>
             <div id="Proof" class="tabcontent">
                 <p>To prove that this game is Turing-complete I will compare it to combinatory logic, which in turn is equivalent to lambda calculus as long as abstraction elimination can be done.</p>
-                <p>The game board is a binary tree, and there are ways in which we can represent a combinatory logic expression as a binary tree. The one I have choosen here is to consider each available empty space as an <i>improper</i> combinator which I'll call <b>T</b>, and each occupied space as putting the two subtrees below it (which are in turn expressions) between parenthesis. The color of the piece occupying that space doesn't matter.</p>
+                <p>The game board is a binary tree, and there are ways in which we can represent a combinatory logic expression as a binary tree. The one I have choosen here is to consider each available empty space as an <i>improper</i> combinator which I'll call <b>T</b>, and each occupied space as putting the two subtrees below it (which are in turn expressions) between parenthesis (except for the green piece which we can just ignore for the sake of this proof).</p>
                 <p>This <b>T</b> combinator needs to be applied to 3 arguments for a reduction to be possible (this is called a <i>transformation</i> in the game rules). I say that it's an <i>improper</i> combinator because its reduction rule depends on the first argument to which it is applied: if the first argument is just another <b>T</b> combinator, it will ignore it and behave as the <b>K</b> combinator applied to its second and third arguments. If the first argument is an expression different from just <b>T</b>, it will behave as the <b>S</b> combinator with its three arguments.</p>
-                <p>So this game is equivalent to <b>SK</b> calculus (which is Turing-complete) except for one detail: applying <b>T</b> to another <b>T</b> as its first argument won't behave as applying <b>S</b> to another <b>S</b> as its first argument. But as long as you don't intend to use <b>S</b> alone as an argument it won't interfere with the rules for abstraction elimination, so it will still be Turing-complete. And if you really want to, you can always use an alternative expression for <b>S</b>, for example <b>S(K(S))(I)</b> which using the <b>T</b> combinator would be <b>T(T(T)(T))(T(T(T))(T))</b>.</p>
+                <p>So this game is equivalent to <b>SK</b> calculus (which is Turing-complete) except for one detail: applying <b>T</b> to another <b>T</b> as its first argument won't behave as applying <b>S</b> to another <b>S</b> as its first argument. But as long as you don't intend to use <b>S</b> alone as an argument it won't interfere with the rules for abstraction elimination, so it will still be Turing-complete. And if you really want to, you can always use an alternative expression for <b>S</b>, for example <b>S(K(S))(I)</b> which employing the <b>T</b> combinator would be <b>T(T(T)(T))(T(T(T))(T))</b>.</p>
             </div>
             <div id="Contact" class="tabcontent">
                 <h2><a href="mailto:gabriel@tarsetti.net">gabriel@tarsetti.net</a></h2>
@@ -509,41 +509,39 @@
         const scoreArea = document.getElementById('score'); 
         const treeArea = document.getElementById('trees'); 
         const movesArea = document.getElementById('moves');
-        const winningScoreArea = document.getElementById('winscore'); 
         const movesList = [];
         const treeMaps = [];
-        var mapIndex, greenScore, redScore, nextColor, winningScore;
+        var mapIndex, greenScore, nextColor;
         var cdIndex = 0, eval = false;
 
         const start = () => {
-            winningScore = 2;
-            winningScoreArea.value = "2";
             movesList.length = 0;
             mapIndex = 0;
             treeMaps[0] = new Map();
-            nextColor = 'green';
-            addNode(1n);
-        }
-
-        const updateWinningScore = () => {
-            if (winningScoreArea.value >= 2 && Number.isInteger(Number(winningScoreArea.value))) {
-                winningScore = winningScoreArea.value;
-            } else {
-                winningScoreArea.value = winningScore;
-            }
+            eval = false;
+            nextColor = 'red';
+            //movesList.push({position: 1n, player: 'red', type: 'add', cooldown: 1n});
+            treeMaps[mapIndex].set(1n, 'lightblue');
+            treeMaps[mapIndex].set(2n, 'lightblue');
+            //movesList.push({position: 3n, player: 'green', type: 'add', cooldown: 3n});
+            treeMaps[mapIndex].set(3n, 'green');
+            cdIndex = 2n;
+            refreshScreen();
         }
 
         const addNode = index => {
+            eval = false;
             movesList.push({position: index, player: nextColor, type: 'add', cooldown: index});
-            treeMaps[mapIndex].set(index, nextColor);
+            treeMaps[mapIndex].set(index, 'lightblue');
             treeMaps[mapIndex].set(2n * index, null);
             treeMaps[mapIndex].set(2n * index + 1n, null);
             changeColor();
             cdIndex = index;
             refreshScreen();
-            if (Math.abs(greenScore - redScore) >= winningScore) {
-                alert (`${greenScore > redScore ? 'Green' : 'Red'} player wins`);
-            }
+        }
+
+        const win = color => {
+            alert (`${color} player wins`);
         }
 
         const skipTurn = () => {
@@ -582,38 +580,36 @@
                 treeMaps[mapIndex].set(to, treeMaps[mapIndex - 1].get(from));
                 setSubTree(2n * to, 2n * from);
                 setSubTree(2n * to + 1n, 2n * from + 1n);
+                if (Number.isInteger(Math.log2(Number(to))) && treeMaps[mapIndex].get(to) == 'green') {
+                    win('Green');
+                }
             } else {
                 treeMaps[mapIndex].set(to, null);
             }
         }
 
         const undo = () => {
-            if (movesList.length > 1){
+            if (movesList.length){
                 var lastMove = movesList.pop();
-                eval = movesList[movesList.length - 1].type == 'tf' ? true : false;
+                eval = movesList.length > 0 && movesList[movesList.length - 1].type == 'tf' ? true : false;
                 if (lastMove.type == 'tf') {
                     mapIndex--;
                 } else {
                     treeMaps[mapIndex].set(lastMove.position, null);
                 }
                 nextColor = lastMove.player;
-                cdIndex = movesList[movesList.length - 1].cooldown;
+                cdIndex = movesList.length > 0 ? movesList[movesList.length - 1].cooldown : 2n;
                 refreshScreen();
             }
         }
 
         const refreshScreen = () => {
             greenScore = 0;
-            redScore = 0;
             treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n) + '</dl></div>';
-            const greenDiff = greenScore - redScore;
             scoreArea.innerHTML = 
             `                                
                 <div>
-                    Score: <span style="color: ${greenDiff == 0 ? 'gray' : greenDiff > 0 ? 'green' : 'red;'};">${Math.abs(greenDiff)}</span></span>
-                </div>
-                <div>
-                    <span style="color: ${nextColor};">${nextColor.charAt(0).toUpperCase() + nextColor.slice(1)}</span> plays next
+                    <span style="color: ${nextColor};">${nextColor.charAt(0).toUpperCase() + nextColor.slice(1)}</span> ${eval ? "performing transformations" : "plays next"}
                 </div>
             `;
             var table = document.createElement('table');
@@ -639,13 +635,23 @@
             }
             movesArea.innerHTML = '';
             movesArea.appendChild(table);
+            if (greenScore > 1 && nextColor == 'green' && !eval) {
+                win('Green');
+            } else if (greenScore == 0) {
+                win('Red');
+            }
         }
 
         const getSubTree = index => {
-            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${eval ? '' : 'onclick="addNode(' + index + 'n)"'}><span class="tooltiptext">${index}</span></a></li>`;
-            if (treeMaps[mapIndex].get(index) == 'green') greenScore ++; else redScore++;
-            const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : cdIndex == index ? ' border: 2px solid orange; padding: 6px 6px;"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
-            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
+            //eval = false; //Overriding eval
+            if (!treeMaps[mapIndex].get(index)) return `<li><a  class="tooltip" ${/*eval ? '' :*/ 'onclick="addNode(' + index + 'n)"'}><span class="tooltiptext">${index}</span></a></li>`;
+            if (treeMaps[mapIndex].get(index) != 'green') {
+                const evaluable = index % 4n || treeMaps[mapIndex].get(2n * index) ? '"' : cdIndex == index && !eval ? ' border: 2px solid orange; padding: 6px 6px;"' : ` border: 2px solid blue; padding: 6px 6px;" onclick="evaluateNode(${index}n);"`;
+                return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};${evaluable}><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
+            } else {
+                greenScore++;
+                return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};"><span class="tooltiptext">${index}</span></a></li>`;
+            }
         }
 
         function openTab(evt, tabName) {
