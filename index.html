@@ -352,8 +352,7 @@
             <div id="Rules" class="tabcontent">
                 <div>
                     <p>Tarset is a game for two players, which also happens to be a Turing tarpit (i.e. it is Turing-complete although it would make a programming language of the <i>esoteric</i> type, partly due to its minimalistic design).</p>
-                    <p>In order to win, the red player must completely eliminate the green piece from the board. On the other hand, the green player needs to either have more than one copy of the green piece on the board or a green piece placed on the leftmost space of the board in order to win.</p>
-                    <p>If the green piece is eliminated or placed on the leftmost space of the board, the winner is immediately determined. But if there is more than one green piece and none of them placed on the leftmost space, the green player will only win after the red player has ended their turn.</p>
+                    <p>In order to win, the red player must completely eliminate the green piece from the board. On the other hand, the green player needs to have a green piece placed on the leftmost space of the board in order to win (that is on the bottom space following the left branch of the tree).</p>
                     <p>The game starts with a neutral piece (light blue) placed on the top space, a second neutral piece below it to the left and the green piece also below the first one to the right. Below the second neutral piece will be two empty spaces.</p>
                     <p>During their turn each player must place a neutral piece on an empty space. Red player goes first.</p>
                     <p>To play a piece on the board, players must click on an empty space.</p>
@@ -493,7 +492,7 @@
             <div id="Proof" class="tabcontent">
                 <p>To prove that this game is Turing-complete I will compare it to combinatory logic, which in turn is equivalent to lambda calculus as long as abstraction elimination can be done.</p>
                 <p>The game board is a binary tree, and there are ways in which we can represent a combinatory logic expression as a binary tree. The one I have choosen here is to consider each available empty space as an <i>improper</i> combinator which I'll call <b>T</b>, and each occupied space as putting the two subtrees below it (which are in turn expressions) between parenthesis (except for the green piece which we can just ignore for the sake of this proof).</p>
-                <p>This <b>T</b> combinator needs to be applied to 3 arguments for a reduction to be possible (this is called a <i>transformation</i> in the game rules). I say that it's an <i>improper</i> combinator because its reduction rule depends on the first argument to which it is applied: if the first argument is just another <b>T</b> combinator, it will ignore it and behave as the <b>K</b> combinator applied to its second and third arguments. If the first argument is an expression different from just <b>T</b>, it will behave as the <b>S</b> combinator with its three arguments.</p>
+                <p>This <b>T</b> combinator needs to be applied to 3 arguments for a reduction to be possible (this is called a <i>transformation</i> in the game rules). I say that it's an <i>improper</i> combinator because its reduction rule depends on the first argument to which it is applied: if the first argument is just another <b>T</b> combinator, it will ignore it and behave as the <b>K</b> combinator applied to its second and third arguments. If the first argument is any expression other than just <b>T</b>, it will behave as the <b>S</b> combinator with its three arguments.</p>
                 <p>So this game is equivalent to <b>SK</b> calculus (which is Turing-complete) except for one detail: applying <b>T</b> to another <b>T</b> as its first argument won't behave as applying <b>S</b> to another <b>S</b> as its first argument. But as long as you don't intend to use <b>S</b> alone as an argument it won't interfere with the rules for abstraction elimination, so it will still be Turing-complete. And if you really want to, you can always use an alternative expression for <b>S</b>, for example <b>S(K(S))(I)</b> which employing the <b>T</b> combinator would be <b>T(T(T)(T))(T(T(T))(T))</b>.</p>
             </div>
             <div id="Contact" class="tabcontent">
@@ -625,9 +624,9 @@
             }
             movesArea.innerHTML = '';
             movesArea.appendChild(table);
-            if (greenScore > 1 && !eval && nextColor == 'green') {
+            /*if (greenScore > 1 && !eval && nextColor == 'green') {
                 win('Green');
-            } else if (greenScore == 0) {
+            } else */if (greenScore == 0) {
                 win('Red');
             }
         }
