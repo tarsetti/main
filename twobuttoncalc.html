@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <style>
+        </style>
+        <div id="show" class="show"></div>
+        <script>
+            function exp(z) {
+                const r = Math.exp(z.re);
+                if (z.im == 0)
+                    return {
+                        re: r,
+                        im: 0
+                    }
+
+                return {
+                    re: r * Math.cos(z.im),
+                    im: r * Math.sin(z.im)
+                }
+            }
+
+            function ln(z) {
+
+                return {
+                    re: Math.log(Math.hypot(z.re, z.im)),
+                    im: Math.atan2(z.im, z.re)
+                }
+            }
+
+            const one = { re: 1, im: 0};
+
+            function eml(x, y) {
+                return {
+                    re: exp(x).re - ln(y).re,
+                    im: exp(x).im - ln(y).im
+                }
+            }
+
+            function evaluate(str) {
+                if (str.length == 1)
+                    return one;
+
+                const ch = str.charAt(0);
+                const subStr = str.slice(1);
+
+                if (ch == "1")
+                    return one;
+                if (ch == "0")
+                    return subEml(subStr);
+            }
+
+            function secondPart(str) {
+                let i = 1;
+                while (i >= 0) {
+                    const ch = str.charAt(0);
+                    str = str.slice(1);
+
+                    if (ch == "1")
+                        i--;
+                    if (ch == 0)
+                        i++;
+                }
+                return str;
+            }
+
+            function subEml(str) {
+                if (str.length == 2)
+                    return eml(one, one);
+                
+                const ch = str.charAt(0);
+                const subStr = str.slice(1);
+                
+                if (ch == "1") {
+                    const ch2 = subStr.charAt(0);
+                    const subStr2 = subStr.slice(1);
+
+                    if (ch2 == "1")
+                        return eml(one, one);
+                    if (ch2 == "0")
+                        return eml(one, subEml(subStr2));
+                }
+
+                if (ch == "0")
+                    return eml(subEml(subStr), evaluate(secondPart(subStr)));
+            }
+        </script>
+    </body>
+</html>
