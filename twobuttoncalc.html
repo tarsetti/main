@@ -2,7 +2,63 @@
 <html>
     <body>
         <style>
+            .calculator {
+                width: 640px;
+                margin: 0 auto;
+                padding: 15px;
+                background: #333;
+                border-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .display {
+                background: #20242b;
+                color: white;
+                padding: 20px;
+                font-family: 'Franklin Gothic Medium', Arial, sans-serif;
+                font-size: 32px;
+                text-align: right;
+                border-radius: 8px;
+                min-height: 240px;
+                overflow-wrap: normal;
+                word-break: normal;
+                white-space: normal;
+                text-align: right;
+            }
+
+            .buttons {
+                display: flex;
+                gap: 15px;
+            }
+
+            .buttons button {
+                flex: 1;
+                height: 120px;
+                font-size: 20px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                background: #3979bd;
+                color: white;
+            }
+
+            .buttons button:last-child {
+                background: #31966d;
+            }
+
+            .buttons button:hover {
+                filter: brightness(1.15);
+            }
         </style>
+        <div class="calculator">
+            <div class="display" id="display"></div>
+            <div class="buttons">
+                <button onclick="addEml()">eml</button>
+                <button onclick="addOne()">1</button>
+            </div>
+        </div>
         <div id="show" class="show"></div>
         <script>
             function exp(z) {
@@ -82,6 +138,58 @@
 
                 if (ch == "0")
                     return eml(subEml(subStr), evaluate(secondPart(subStr)));
+            }
+
+            let cont = 0;
+            let str = "";
+            let showStr = "";
+            let parenthesis = "";
+
+            function addEml() {
+                str += "0";
+                parenthesis += "0";
+                showStr += "eml(<wbr>";
+                cont++;
+                document.getElementById("display").innerHTML = showStr;
+            }
+
+            function addOne() {
+                str += "1";
+                showStr += "1"
+                cont--;
+
+                if (parenthesis.length > 0 && parenthesis[parenthesis.length - 1] == "1") {
+                    parenthesis = parenthesis.slice(0, -2);
+                    showStr += ")";
+
+                    while (parenthesis[parenthesis.length - 1] == "1") {
+                        parenthesis = parenthesis.slice(0, -2);
+                        showStr += ")";
+                    }
+                }
+
+                parenthesis += "1";
+                showStr += ",<wbr>";
+
+                if (cont > -1) {
+                    document.getElementById("display").innerHTML = showStr;
+                }
+                else {
+                    const result = evaluate(str);
+                    if (result.im == 0)
+                        document.getElementById("display").textContent = result.re;
+                    else if (result.re == 0)
+                        document.getElementById("display").textContent = result.im + "i";
+                    else if (result.im > 0)
+                        document.getElementById("display").textContent = result.re + " + " + result.im + "i";
+                    else
+                        document.getElementById("display").textContent = result.re + " - " + (-result.im) + "i";
+
+                    str = "";
+                    showStr = "";
+                    parenthesis = "";
+                    cont = 0;
+                }
             }
         </script>
     </body>
