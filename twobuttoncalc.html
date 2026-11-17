@@ -62,13 +62,18 @@
     </style>
     
     <div class="top">
-        <h1>Odrzywołek's Two-Button Scientific Calculator</h1>
+        <p><h1>Odrzywołek's Two-Button Scientific Calculator</h1></p>
         <p>This tool is based on Andrzej Odrzywołek's paper
             <a href="https://arxiv.org/html/2603.21852v2" target="new">All elementary functions from a single operator</a>
         </p>
-        <p>eml (x, y) = exp (x) - ln (y)</p>
+        <p>For further details on why this works you can check <a href="https://www.youtube.com/watch?v=LxVW3b8jVdE" target="new">James Grime's video on Numberphile</a></p>
         <br/>
-        <p>Note: this calculator might have rounding errors and might show NaN for certain calculations</p>
+        <p>This calculator uses just one function and one constant:</p>
+        <p>Function: eml (x, y) = exp (x) - ln (y)</p>
+        <p>Constant: 1</p>
+        <p>You don't even need an "=" button; as soon as the number of constants entered equals the number of functions plus one it will show the result.</p>
+        <br/>
+        <p>Note: This calculator is implemented in JavaScript and is for educational purposes only; it might have rounding errors and show NaN for some values depending on how you compute certain functions</p>
     </div>
     <div class="calculator">
         <div class="display" id="display"></div>
@@ -78,58 +83,36 @@
         </div>
     </div>
     <div class="functions">
-        e = exp (1) - ln (1) = eml (1, 1)<button onclick="addEml();addOne();addOne();">Add</button><br/>
-        e<sup>x</sup> = exp (x) - ln (1) = eml (x, 1)<button onclick="addEml();">First</button>x<button onclick="addOne();">Second</button><br>
-        ln (x) = exp (1) - (exp (1) - ln (x)) = exp (1) - eml (1, x) = exp (1) - ln (exp (eml (1, x))) = eml (1, exp (eml (1, x))) = eml (1, eml (eml (1, x), 1))<button onclick="addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();">Second</button><br/>
-        x - y = exp (ln (x)) - ln (exp (y)) = eml (ln (x), exp (y)) = eml (eml (1, eml (eml (1, x), 1)), eml (y, 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();addEml();">Second</button>y<button onclick="addOne();">Third</button><br/>
+        <p><h3>Sample functions</h3></p>
+        <p>
+            Below is a list of sample functions and constants and their equivalences just to show how you can do calculations using only the two buttons of the above calculator.<br/>
+            After each example a set of buttons are provided to enter each part of the expression automatically, so that you can test them without having to enter the whole expressions manually.<br/>
+            Constants will have 1 button; functions with 1 parameter will have two buttons splitting the expression around the parameter; and three buttons for functions requiring two parameters.
+        </p>
         <br/>
-        0 = 1 - 1 = eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();">Add</button><br/>
-        -1 = 0 - 1 = eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();">Add</button><br/>
-        -x = 0 - x = eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (x, 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();">First</button>x<button onclick="addOne();">Second</button><br/>
-        x + y = x - (-y) = eml (eml (1, eml (eml (1, x), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (y, 1)), 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();">Second</button>y<button onclick="addOne();addOne();">Third</button><br/>
-        2 = 1 + 1 = eml (eml (1, eml (eml (1, 1), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1)), 1))<button onclick="addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();">Add</button><br/>
-        x . y = exp (ln (x) + ln (y)) = eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, x), 1))), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (1, eml (eml (1, y), 1)), 1)), 1)), 1)<button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();">Second</button>y<button onclick="addOne();addOne();addOne();addOne();">Third</button><br/>
-        x / y = exp (ln (x) - ln (y)) = eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, x), 1))), 1)), eml (eml (1, eml (eml (1, y), 1)), 1)), 1)<button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();">Second</button>y<button onclick="addOne();addOne();addOne();">Third</button><br/>
-        1 / 2 = exp (-ln (2)) = <button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();">Add</button><br/>
-        y<sup>x</sup> = exp (x . ln(y)) = eml (eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, x), 1))), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (1, eml (eml (1, eml (1, eml (eml (1, y), 1))), 1)), 1)), 1)), 1), 1)<button onclick="addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();">First</button>x<button onclick="addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();">Second</button>y<button onclick="addOne();addOne();addOne();addOne();addOne();addOne();">Third</button><br/>
-        i = (-1)<sup>1/2</sup> = eml (eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1))), 1))), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, 1), 1))), 1)), eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1)), 1))), 1)), 1)), 1)), 1))), 1)), 1)), 1)), 1), 1)<button onclick="addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();">Add</button><br/>
-        π = -i . ln (-1) = eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1))), 1))), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (eml (1, eml (eml (1, eml (1, eml (eml (1, 1), 1))), 1)), eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1)), 1))), 1)), 1)), 1)), 1))), 1)), 1)), 1)), 1), 1), 1))), 1))), 1)), eml (eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (eml (1, eml (eml (1, eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, eml (eml (1, 1), 1)), eml (1, 1))), 1)), eml (1, 1))), 1))), 1)), 1)), 1)), 1)<button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();">Add</button><br/>
-        cos (x) = [exp (i . x) + exp (-i . x)] / 2 = <button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();">First</button>x<button onclick="addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();">Second</button>x<button onclick="addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();">Third</button><br/>
-        arccos (x) = -i . ln [x + i . (1 - x<sup>2</sup>)<sup>1/2</sup>] = 
-        <button onclick="addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-            addEml();addOne();addEml();addEml();addOne();
-                addEml();addEml();addOne();addEml();addEml();addOne();
-                    ">First</button>x<button onclick="
-                addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();
-                    addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                        addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();
-                    addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();
-                        addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                            addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                                addOne();
-                            addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();
-                                addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();
-                            addOne();addOne();addOne();
-                        addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                            addEml();addEml();addOne();addEml();addEml();addOne();
-                                addOne();
-                            addOne();addEml();
-                                addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                                    addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();
-                                addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();
-                                    ">Second</button>x<button onclick="
-                                addOne();addOne();addOne();addOne();addOne();addOne();
-                            addOne();
-                        addOne();addOne();addOne();addOne();addOne();addOne();
-                    addOne();addOne();addOne();addOne();
-                addOne();addOne();
-            addOne();
-        addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();
-            addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();
-                addEml();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addEml();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addEml();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addEml();addOne();addOne();addOne();addOne();addOne();addOne();addOne();addOne();
-            addOne();  
-        addOne();addOne();addOne();addOne();">Third</button>
-        <br/>
+        <p>
+            e = exp (1) - ln (1) = eml (1, 1) <button onclick="addE();">Add</button><br/>
+            e<sup>x</sup> = exp (x) - ln (1) = eml (x, 1) <button onclick="addExp_1();">First</button> x <button onclick="addExp_2();">Second</button><br>
+            ln (x) = exp (1) - (exp (1) - ln (x)) = exp (1) - eml (1, x) = exp (1) - ln (exp (eml (1, x))) = eml (1, exp (eml (1, x))) = eml (1, eml (eml (1, x), 1)) <button onclick="addLn_1();">First</button> x <button onclick="addLn_2();">Second</button><br/>
+            x - y = exp (ln (x)) - ln (exp (y)) = eml (ln (x), exp (y)) = eml (eml (1, eml (eml (1, x), 1)), eml (y, 1)) <button onclick="addSub_1();">First</button> x <button onclick="addSub_2();">Second</button> y <button onclick="addSub_3();">Third</button><br/>
+            <br/>
+            0 = ln (1) <button onclick="addZero();">Add</button><br/>
+            -1 = 0 - 1 <button onclick="addMinusOne();">Add</button><br/>
+            -x = 0 - x <button onclick="addNeg_1();">First</button> x <button onclick="addNeg_2();">Second</button><br/>
+            x + y = x - (-y) <button onclick="addAdd_1();">First</button> x <button onclick="addAdd_2();">Second</button> y <button onclick="addAdd_3();">Third</button><br/>
+            2 = 1 + 1 <button onclick="addTwo();">Add</button><br/>
+            x . y = exp (ln (x) + ln (y)) <button onclick="addProd_1();">First</button> x <button onclick="addProd_2();">Second</button> y <button onclick="addProd_3();">Third</button><br/>
+            x / y = exp (ln (x) - ln (y))  <button onclick="addDiv_1();">First</button> x <button onclick="addDiv_2();">Second</button> y <button onclick="addDiv_3();">Third</button><br/>
+            1 / x = exp (-ln (x)) <button onclick="addRecip_1();">First</button> x <button onclick="addRecip_2();">Second</button><br/>
+            1 / 2 = exp (-ln (2)) = <button onclick="addHalf();">Add</button><br/>
+            y<sup>x</sup> = exp (x . ln(y)) <button onclick="addPow_1();">First</button> x <button onclick="addPow_2();">Second</button> y <button onclick="addPow_3();">Third</button><br/>
+            y<sup>2</sup> = exp (2 . ln(y)) <button onclick="addSqr_1();">First</button> x <button onclick="addSqr_2();">Second</button><br>
+            √x = x<sup>1/2</sup> <button onclick="addSqrt_1();">First</button> x <button onclick="addSqrt_2();">Second</button><br>
+            i = (-1)<sup>1/2</sup> <button onclick="addI();">Add</button><br/>
+            π = -i . ln (-1) <button onclick="addPi();">Add</button><br/>
+            cos (x) = (2 / (1 - ( (2 / (e <sup>i x</sup> + 1) ) - 1)<sup>2</sup> ) ) - 1 <button onclick="addCos_1();">First</button> x <button onclick="addCos_2();">Second</button><br/>
+            arccos (x) = -i . ln ( (2 / (1 - (i ( (2 / (x + 1) ) - 1 ) <sup>1/2</sup>) ) ) - 1 ) <button onclick="addArccos_1();">First</button> x <button onclick="addArccos_2();">Second</button><br/>
+        </p>
 
     </div>
 
@@ -258,6 +241,8 @@
                 else if (result.re == 0)
                     if (result.im == 1)
                         display.textContent = "i";
+                    else if (result.im == -1)
+                        display.textContent = "-i";
                     else
                         display.textContent = result.im + "i";
                 else if (result.im == 1)
@@ -272,6 +257,283 @@
                 parenthesis = "";
                 cont = 0;
             }
+        }
+
+        function addE() {
+            addEml();addOne();addOne();
+        }
+
+        function addExp_1() {
+            addEml();
+        }
+
+        function addExp_2() {
+            addOne();
+        }
+
+        function addLn_1() {
+            addEml();addOne();addEml();addEml();addOne();
+        }
+
+        function addLn_2() {
+            addOne();
+        }
+
+        function addSub_1() {
+            addEml();addEml();addOne();addEml();addEml();addOne();
+        }
+
+        function addSub_2() {
+            console.log("sub2");
+            addOne();addEml();
+        }
+
+        function addSub_3() {
+            addOne();
+        }
+
+        function addZero() {
+            addLn_1();
+                addOne();
+            addLn_2();
+        }
+
+        function addMinusOne() {
+            addSub_1();
+                addZero();
+            addSub_2();
+                addOne();
+            addSub_3();
+        }
+
+        function addNeg_1() {
+            addSub_1();
+                addZero();
+            addSub_2();
+        }
+
+        function addNeg_2() {
+            addSub_3();
+        }
+
+        function addAdd_1() {
+            addSub_1();
+        }
+        
+        function addAdd_2() {
+            addSub_2();
+                addNeg_1();
+        }
+
+        function addAdd_3() {
+                addNeg_2();
+            addSub_3();
+        }
+
+        function addTwo() {
+            addAdd_1();
+                addOne();
+            addAdd_2();
+                addOne();
+            addAdd_3();
+        }
+
+        function addProd_1() {
+            addExp_1();
+                addAdd_1();
+                    addLn_1();
+        }
+
+        function addProd_2() {
+                    addLn_2();
+                addAdd_2();
+                    addLn_1();
+        }
+
+        function addProd_3() {
+                    addLn_2();
+                addAdd_3();
+            addExp_2();
+        }
+
+        function addDiv_1() {
+            addExp_1();
+                addSub_1();
+                    addLn_1();
+        }
+        
+        function addDiv_2() {
+                    addLn_2();
+                addSub_2();
+                    addLn_1();
+            
+        }
+        function addDiv_3() {
+                    addLn_2();
+                addSub_3();
+            addExp_2();            
+        }
+
+        function addRecip_1() {
+            addExp_1();
+                addNeg_1();
+                    addLn_1();
+        }
+
+        function addRecip_2() {
+                    addLn_2();
+                addNeg_2();
+            addExp_2();
+        }
+
+        function addHalf() {
+            addRecip_1();
+                addTwo();
+            addRecip_2();
+        }
+
+        function addPow_1() {
+            addExp_1();
+                addProd_1();
+        }
+
+        function addPow_2() {
+                addProd_2();
+                    addLn_1();
+        }
+        
+        function addPow_3() {
+                    addLn_2();
+                addProd_3();
+            addExp_2();
+        }
+
+        function addSqr_1() {
+            addPow_1();
+                addTwo();
+            addPow_2();
+        }
+
+        function addSqr_2() {
+            addPow_3();
+        }
+
+        function addSqrt_1() {
+            addPow_1();
+                addHalf();
+            addPow_2();
+        }
+
+        function addSqrt_2() {
+            addPow_3();
+        }
+
+        function addI() {
+            addPow_1();
+                addHalf();
+            addPow_2();
+                addMinusOne();
+            addPow_3();
+        }
+
+        function addPi() {
+            addProd_1();
+                addNeg_1();
+                    addI();
+                addNeg_2();
+            addProd_2();
+                addLn_1();
+                    addMinusOne();
+                addLn_2();
+            addProd_3();
+        }
+
+        function addCos_1() {
+            addSub_1();
+                addDiv_1();
+                    addTwo();
+                addDiv_2();
+                    addSub_1();
+                        addOne();
+                    addSub_2();
+                        addPow_1();
+                            addTwo();
+                        addPow_2();
+                            addSub_1();
+                                addDiv_1();
+                                    addTwo();
+                                addDiv_2();
+                                    addAdd_1();
+                                        addExp_1();
+                                            addProd_1();
+                                                addI();
+                                            addProd_2();
+        }
+
+        function addCos_2() {
+                                            addProd_3();
+                                        addExp_2();
+                                    addAdd_2();
+                                        addOne();
+                                    addAdd_3();
+                                addDiv_3();
+                            addSub_2();
+                                addOne();
+                            addSub_3();
+                        addPow_3();
+                    addSub_3();
+                addDiv_3();
+            addSub_2();
+                addOne();
+            addSub_3()
+        }
+
+        function addArccos_1() {
+            addProd_1();
+                addNeg_1();
+                    addI();
+                addNeg_2();
+            addProd_2();
+                addLn_1();
+                    addSub_1();
+                        addDiv_1();
+                            addTwo();
+                        addDiv_2();
+                            addSub_1();
+                                addOne();
+                            addSub_2();
+
+                                addProd_1();
+                                    addI();
+                                addProd_2();
+                                    addPow_1();
+                                        addHalf();
+                                    addPow_2();
+
+                                        addSub_1();
+                                            addDiv_1();
+                                                addTwo();
+                                            addDiv_2();
+                                                addAdd_1();
+            }
+
+            function addArccos_2() {
+                                                addAdd_2();
+                                                    addOne();
+                                                addAdd_3();
+                                            addDiv_3();
+                                        addSub_2();
+                                            addOne();
+                                        addSub_3();
+                                    addPow_3();
+                                addProd_3();
+                            addSub_3();
+                        addDiv_3();
+                    addSub_2();
+                        addOne();
+                    addSub_3();
+                addLn_2();
+            addProd_3();
         }
     </script>
 </body>
