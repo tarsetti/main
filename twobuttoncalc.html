@@ -59,64 +59,332 @@
         .buttons button:hover {
             filter: brightness(1.15);
         }
+
+        html, body, .container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+            height: auto;
+            margin: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        table, th, td {
+            border: 1px solid #BBB;
+            border-collapse: collapse;
+            padding: 4px !important;
+        }
+
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: none;
+            border-top: none;
+            border-bottom: none;
+            animation: fadeEffect 0.5s;
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        } 
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            background-color: #BBB;
+            color: black;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 5px;
+            position: absolute;
+            z-index: 1;
+            top: 200%;
+            left: -15%;
+            margin: auto;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #BBB transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
+        .tooltip .tooltiptext {
+            opacity: 0;
+            transition: opacity 0.5s;
+            transition-delay: 1s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            opacity: 1;
+        }
+
+        .tree * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tree dl, .tree ol {
+            padding-top: 3px; position: relative;
+        }
+
+        .tree li {
+            float: left; text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 6px 1px 0 1px;
+        }
+
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute; top: 0; right: 50%;
+            border-top: 1px solid #000;
+            width: 50%; height: 6px;
+        }
+
+        .tree li::after {
+            right: auto; left: 50%;
+            border-left: 1px solid #000;
+        }
+
+        .tree li:only-child::before {
+            content: '';
+            position: absolute; top: 0px; left: 50%;
+            border-left: 1px solid #000;
+            width: 0; height: 6px;
+        }
+
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+        
+        .tree li:last-child::before {
+            border-right: 1px solid #000;
+            border-radius: 0 7px 0 0;
+            -webkit-border-radius: 0 7px 0 0;
+            -moz-border-radius: 0 7px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 7px 0 0 0;
+            -webkit-border-radius: 7px 0 0 0;
+            -moz-border-radius: 7px 0 0 0;
+        }
+
+        .tree dl dl::before, .tree dl ol::before {
+            content: '';
+            position: absolute; top: -4px; left: 50%;
+            border-left: 1px solid #000;
+            width: 0; height: 7px;
+        }
+
+        .tree li a, .tree li p {
+            border: 1px solid #000;
+            display: inline-block;
+            
+            border-radius: 11px;
+            -webkit-border-radius: 11px;
+            -moz-border-radius: 11px;
+        }
+
+        .tree li a {
+            padding: 7px 7px;
+        }
+
+        .tree li p {
+            font-size: medium;
+            padding: 0px 6px;
+            vertical-align: top;
+            top: 0px;
+            
+        }
     </style>
-    
-    <div class="top">
-        <p><h1>Odrzywołek's Two-Button Scientific Calculator</h1></p>
-        <p>This tool is based on Andrzej Odrzywołek's paper
-            <a href="https://arxiv.org/html/2603.21852v2" target="new">All elementary functions from a single operator</a>
-        </p>
-        <p>For further details on why this works you can check <a href="https://www.youtube.com/watch?v=LxVW3b8jVdE" target="new">James Grime's video on Numberphile</a></p>
-        <br/>
-        <p>This calculator uses just one function and one constant:</p>
-        <p>Function: eml (x, y) = exp (x) - ln (y)</p>
-        <p>Constant: 1</p>
-        <p>You don't even need an "=" button; as soon as the number of constants entered equals the number of functions plus one it will show the result.</p>
-        <br/>
-        <p>Note: This calculator is implemented in JavaScript and is for educational purposes only; it might have rounding errors and show NaN for some values depending on how you compute certain functions</p>
-    </div>
-    <div class="calculator">
-        <div class="display" id="display"></div>
-        <div class="buttons">
-            <button onclick="addEml()">eml</button>
-            <button onclick="addOne()">1</button>
+    <div class="container">
+        <div class="content">
+            <div class="top">
+                <p><h1>Odrzywołek's Two-Button Scientific Calculator</h1></p>
+                <p>This tool is based on Andrzej Odrzywołek's paper
+                    <a href="https://arxiv.org/html/2603.21852v2" target="new">All elementary functions from a single operator</a>
+                </p>
+                <p>For further details on why this works you can check <a href="https://www.youtube.com/watch?v=LxVW3b8jVdE" target="new">James Grime's video on Numberphile</a></p>
+                <br/>
+                <p>This calculator uses just one function and one constant:</p>
+                <p>Function: eml (x, y) = exp (x) - ln (y)</p>
+                <p>Constant: 1</p>
+                <p>You don't even need an "=" button; as soon as the number of constants entered equals the number of functions plus one it will show the result.</p>
+                <br/>
+                <p>Note: This calculator is implemented in JavaScript and is for educational purposes only; it might have rounding errors and show NaN for some values depending on how you compute certain functions</p>
+            </div>
+            </div>
+        <div class="content">
+            <div id="Calc" class="tabcontent">
+                <button class="tablinks" onclick="openTab(event, 'Tree');">Switch to Binary Tree Mode</button>
+                <div class="calculator">
+                    <div class="display" id="display"></div>
+                        <div class="buttons">
+                            <button onclick="addEml()">eml</button>
+                            <button onclick="addOne()">1</button>
+                        </div>
+                    </div>
+                    <div class="functions">
+                        <p><h3>Sample functions</h3></p>
+                        <p>
+                            Below is a list of sample functions and constants and their equivalences just to show how you can do calculations using only the two buttons of the above calculator.<br/>
+                            After each example a set of buttons are provided to enter each part of the expression automatically, so that you can test them without having to enter the whole expressions manually.<br/>
+                            Constants will have 1 button; functions with 1 parameter will have two buttons splitting the expression around the parameter; and three buttons for functions requiring two parameters.
+                        </p>
+                        <br/>
+                        <p>
+                            e = exp (1) - ln (1) = eml (1, 1) <button onclick="addE();">Add</button><br/>
+                            e<sup>x</sup> = exp (x) - ln (1) = eml (x, 1) <button onclick="addExp_1();">First</button> x <button onclick="addExp_2();">Second</button><br>
+                            ln (x) = exp (1) - (exp (1) - ln (x)) = exp (1) - eml (1, x) = exp (1) - ln (exp (eml (1, x))) = eml (1, exp (eml (1, x))) = eml (1, eml (eml (1, x), 1)) <button onclick="addLn_1();">First</button> x <button onclick="addLn_2();">Second</button><br/>
+                            x - y = exp (ln (x)) - ln (exp (y)) = eml (ln (x), exp (y)) = eml (eml (1, eml (eml (1, x), 1)), eml (y, 1)) <button onclick="addSub_1();">First</button> x <button onclick="addSub_2();">Second</button> y <button onclick="addSub_3();">Third</button><br/>
+                            <br/>
+                            0 = ln (1) <button onclick="addZero();">Add</button><br/>
+                            -1 = 0 - 1 <button onclick="addMinusOne();">Add</button><br/>
+                            -x = 0 - x <button onclick="addNeg_1();">First</button> x <button onclick="addNeg_2();">Second</button><br/>
+                            x + y = x - (-y) <button onclick="addAdd_1();">First</button> x <button onclick="addAdd_2();">Second</button> y <button onclick="addAdd_3();">Third</button><br/>
+                            2 = 1 + 1 <button onclick="addTwo();">Add</button><br/>
+                            x . y = exp (ln (x) + ln (y)) <button onclick="addProd_1();">First</button> x <button onclick="addProd_2();">Second</button> y <button onclick="addProd_3();">Third</button><br/>
+                            x / y = exp (ln (x) - ln (y))  <button onclick="addDiv_1();">First</button> x <button onclick="addDiv_2();">Second</button> y <button onclick="addDiv_3();">Third</button><br/>
+                            1 / x = exp (-ln (x)) <button onclick="addRecip_1();">First</button> x <button onclick="addRecip_2();">Second</button><br/>
+                            1 / 2 = exp (-ln (2)) = <button onclick="addHalf();">Add</button><br/>
+                            y<sup>x</sup> = exp (x . ln(y)) <button onclick="addPow_1();">First</button> x <button onclick="addPow_2();">Second</button> y <button onclick="addPow_3();">Third</button><br/>
+                            y<sup>2</sup> = exp (2 . ln(y)) <button onclick="addSqr_1();">First</button> x <button onclick="addSqr_2();">Second</button><br>
+                            √x = x<sup>1/2</sup> <button onclick="addSqrt_1();">First</button> x <button onclick="addSqrt_2();">Second</button><br>
+                            i = (-1)<sup>1/2</sup> <button onclick="addI();">Add</button><br/>
+                            π = -i . ln (-1) <button onclick="addPi();">Add</button><br/>
+                            cos (x) = (2 / (1 - ( (2 / (e <sup>i x</sup> + 1) ) - 1)<sup>2</sup> ) ) - 1 <button onclick="addCos_1();">First</button> x <button onclick="addCos_2();">Second</button><br/>
+                            arccos (x) = -i . ln ( (2 / (1 - (i ( (2 / (x + 1) ) - 1 ) <sup>1/2</sup>) ) ) - 1 ) <button onclick="addArccos_1();">First</button> x <button onclick="addArccos_2();">Second</button><br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="Tree" class="tabcontent">
+                <button class="tablinks" onclick="openTab(event, 'Calc');" id="defaultOpen">Switch to Calculator Mode</button>
+                <div class="content">
+                    <p>
+                        This mode represents EML expressions as a binary tree, being its leaves the constant "1" and each node the EML function, having its EXP part on the left brach and the LN on the right one.<br/>
+                        Click on a leaf to add a node; click on a node to remove it; check the result on the right.
+                    </p>
+
+                    <div id="trees" style="float: left; width: 90%;">
+                        
+                    </div>
+                    <div id="result" style="float: right; width: 10%;">
+                        Result: 1
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
-    <div class="functions">
-        <p><h3>Sample functions</h3></p>
-        <p>
-            Below is a list of sample functions and constants and their equivalences just to show how you can do calculations using only the two buttons of the above calculator.<br/>
-            After each example a set of buttons are provided to enter each part of the expression automatically, so that you can test them without having to enter the whole expressions manually.<br/>
-            Constants will have 1 button; functions with 1 parameter will have two buttons splitting the expression around the parameter; and three buttons for functions requiring two parameters.
-        </p>
-        <br/>
-        <p>
-            e = exp (1) - ln (1) = eml (1, 1) <button onclick="addE();">Add</button><br/>
-            e<sup>x</sup> = exp (x) - ln (1) = eml (x, 1) <button onclick="addExp_1();">First</button> x <button onclick="addExp_2();">Second</button><br>
-            ln (x) = exp (1) - (exp (1) - ln (x)) = exp (1) - eml (1, x) = exp (1) - ln (exp (eml (1, x))) = eml (1, exp (eml (1, x))) = eml (1, eml (eml (1, x), 1)) <button onclick="addLn_1();">First</button> x <button onclick="addLn_2();">Second</button><br/>
-            x - y = exp (ln (x)) - ln (exp (y)) = eml (ln (x), exp (y)) = eml (eml (1, eml (eml (1, x), 1)), eml (y, 1)) <button onclick="addSub_1();">First</button> x <button onclick="addSub_2();">Second</button> y <button onclick="addSub_3();">Third</button><br/>
-            <br/>
-            0 = ln (1) <button onclick="addZero();">Add</button><br/>
-            -1 = 0 - 1 <button onclick="addMinusOne();">Add</button><br/>
-            -x = 0 - x <button onclick="addNeg_1();">First</button> x <button onclick="addNeg_2();">Second</button><br/>
-            x + y = x - (-y) <button onclick="addAdd_1();">First</button> x <button onclick="addAdd_2();">Second</button> y <button onclick="addAdd_3();">Third</button><br/>
-            2 = 1 + 1 <button onclick="addTwo();">Add</button><br/>
-            x . y = exp (ln (x) + ln (y)) <button onclick="addProd_1();">First</button> x <button onclick="addProd_2();">Second</button> y <button onclick="addProd_3();">Third</button><br/>
-            x / y = exp (ln (x) - ln (y))  <button onclick="addDiv_1();">First</button> x <button onclick="addDiv_2();">Second</button> y <button onclick="addDiv_3();">Third</button><br/>
-            1 / x = exp (-ln (x)) <button onclick="addRecip_1();">First</button> x <button onclick="addRecip_2();">Second</button><br/>
-            1 / 2 = exp (-ln (2)) = <button onclick="addHalf();">Add</button><br/>
-            y<sup>x</sup> = exp (x . ln(y)) <button onclick="addPow_1();">First</button> x <button onclick="addPow_2();">Second</button> y <button onclick="addPow_3();">Third</button><br/>
-            y<sup>2</sup> = exp (2 . ln(y)) <button onclick="addSqr_1();">First</button> x <button onclick="addSqr_2();">Second</button><br>
-            √x = x<sup>1/2</sup> <button onclick="addSqrt_1();">First</button> x <button onclick="addSqrt_2();">Second</button><br>
-            i = (-1)<sup>1/2</sup> <button onclick="addI();">Add</button><br/>
-            π = -i . ln (-1) <button onclick="addPi();">Add</button><br/>
-            cos (x) = (2 / (1 - ( (2 / (e <sup>i x</sup> + 1) ) - 1)<sup>2</sup> ) ) - 1 <button onclick="addCos_1();">First</button> x <button onclick="addCos_2();">Second</button><br/>
-            arccos (x) = -i . ln ( (2 / (1 - (i ( (2 / (x + 1) ) - 1 ) <sup>1/2</sup>) ) ) - 1 ) <button onclick="addArccos_1();">First</button> x <button onclick="addArccos_2();">Second</button><br/>
-        </p>
-
-    </div>
-
     <script>
+        const treeArea = document.getElementById('trees'); 
+        const resultArea = document.getElementById('result'); 
+        const displayArea = document.getElementById("display");
+
+        const treeMaps = [];
+        treeMaps[0] = new Map();
+        let mapIndex = 0;
+
+        const one = { re: 1, im: 0};
+        let cont = 0;
+        let str = "";
+        let showStr = "";
+        let parenthesis = "";
+
+        document.getElementById("defaultOpen").click();
+
+        function refreshScreen() {
+            treeArea.innerHTML = '<div class="tree"><dl>' + getSubTree(1n) + '</dl></div>';
+        }
+
+        function getSubTree(index) {
+            if (!treeMaps[mapIndex].get(index)) {
+                addOne();
+                return `<li><a  class="tooltip" ${'onclick="addNode(' + index + 'n)"'}><span class="tooltiptext">${index}</span></a></li>`;
+            }
+            addEml();
+            return `<li><a class="tooltip" style="background-color:${treeMaps[mapIndex].get(index)};" onclick="removeNode(${index}n);"><span class="tooltiptext">${index}</span></a><ol>${getSubTree(2n * index)}${getSubTree(2n * index + 1n)}</ol></li>`;
+        }
+
+        function addNode (index) {
+            treeMaps[mapIndex].set(index, 'lightblue');
+            treeMaps[mapIndex].set(2n * index, null);
+            treeMaps[mapIndex].set(2n * index + 1n, null);
+            refreshScreen();
+        }
+                
+        function removeNode (index) {
+            treeMaps[mapIndex].set(index, null);
+            refreshScreen();
+        }
+
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            reset();
+            refreshScreen();
+            reset();
+        }
+
+        //--------------------------------------------------
+
         function exp(z) {
             const r = Math.exp(z.re);
             if (z.im == 0)
@@ -137,8 +405,6 @@
                 im: Math.atan2(z.im, z.re)
             }
         }
-
-        const one = { re: 1, im: 0};
 
         function eml(x, y) {
             return {
@@ -195,20 +461,14 @@
                 return eml(subEml(subStr), evaluate(secondPart(subStr)));
         }
 
-        let cont = 0;
-        let str = "";
-        let showStr = "";
-        let parenthesis = "";
-        const display = document.getElementById("display");
-
         function addEml() {
             str += "0";
             parenthesis += "0";
             showStr += "eml(<wbr>";
             cont++;
 
-            display.innerHTML = showStr;
-            display.scrollTop = display.scrollHeight;
+            displayArea.innerHTML = showStr;
+            displayArea.scrollTop = displayArea.scrollHeight;
         }
 
         function addOne() {
@@ -230,34 +490,46 @@
             showStr += ",<wbr>";
 
             if (cont > -1) {
-                display.innerHTML = showStr;
-                display.scrollTop = display.scrollHeight;
+                displayArea.innerHTML = showStr;
+                displayArea.scrollTop = displayArea.scrollHeight;
             }
             else {
                 const rawResult = evaluate(str);
                 const result = { re: parseFloat(rawResult.re.toFixed(13)), im: parseFloat(rawResult.im.toFixed(13)) };
+                let resultToShow;
+
                 if (result.im == 0)
-                    display.textContent = result.re;
+                    resultToShow = result.re;
                 else if (result.re == 0)
                     if (result.im == 1)
-                        display.textContent = "i";
+                        resultToShow = "i";
                     else if (result.im == -1)
-                        display.textContent = "-i";
+                        resultToShow = "-i";
                     else
-                        display.textContent = result.im + "i";
+                        resultToShow = result.im + "i";
                 else if (result.im == 1)
-                    display.textContent = result.re + " + i";
+                    resultToShow = result.re + " + i";
                 else if (result.im > 0)
-                    display.textContent = result.re + " + " + result.im + "i";
+                    resultToShow = result.re + " + " + result.im + "i";
                 else
-                    display.textContent = result.re + " - " + (-result.im) + "i";
+                    resultToShow = result.re + " - " + (-result.im) + "i";
 
-                str = "";
-                showStr = "";
-                parenthesis = "";
-                cont = 0;
+                reset();
+
+                displayArea.textContent = resultToShow;
+                resultArea.textContent = resultToShow;
             }
         }
+
+        function reset() {
+            displayArea.textContent = "";
+            str = "";
+            showStr = "";
+            parenthesis = "";
+            cont = 0;
+        }
+
+        //-----------------------------------
 
         function addE() {
             addEml();addOne();addOne();
